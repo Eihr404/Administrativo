@@ -8,6 +8,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Administracion.MD;
+
 
 namespace Administracion.GUI
 {
@@ -19,6 +21,17 @@ namespace Administracion.GUI
         public MainWindow()
         {
             InitializeComponent();
+
+            try
+            {
+                TestConexionMD test = new TestConexionMD();
+                test.ProbarConexion();
+                MessageBox.Show("Conexión exitosa con Oracle");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error de conexión:\n" + ex.Message);
+            }
         }
 
         /* Función encargada de manejar el comportamiento por click, de los elementos 

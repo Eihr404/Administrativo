@@ -37,6 +37,9 @@
           " Tag="Proveedores" Click="MenuItem_Click">
                 <MenuItem Header="Menu de Proveedores"/>
             </MenuItem>
+            <MenuItem Header="Gestión de clientes           " Tag="Clientes" Click="MenuItem_Click">
+                <MenuItem Header="Menu de Clientes"/>
+            </MenuItem>
         </Menu>
 
     </Grid>

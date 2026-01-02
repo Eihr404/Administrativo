@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -9,7 +10,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Administracion.MD;
-
 
 namespace Administracion.GUI
 {
@@ -24,9 +24,16 @@ namespace Administracion.GUI
 
             try
             {
-                TestConexionMD test = new TestConexionMD();
-                test.ProbarConexion();
-                MessageBox.Show("Conexión exitosa con Oracle");
+                bool ok = TestConexionMD.ProbarConexion();
+
+                if (ok)
+                {
+                    MessageBox.Show("Conexión exitosa con Oracle");
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo conectar a Oracle");
+                }
             }
             catch (Exception ex)
             {
@@ -47,6 +54,10 @@ namespace Administracion.GUI
                 // En caso de dar click a opción proveedores, muestra la ventana proveedores
                 case "Proveedores":
                     new Proveedor().Show();
+                    break;
+                // En caso de dar click a opción clientes, muestra la ventana clientes
+                case "Clientes":
+                    new Cliente().Show();
                     break;
             }
         }

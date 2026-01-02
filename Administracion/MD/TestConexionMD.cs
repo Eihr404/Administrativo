@@ -1,14 +1,27 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using Administracion.Data;
+using System;
 
 namespace Administracion.MD
 {
-    public class TestConexionMD
+    public static class TestConexionMD
     {
-        public void ProbarConexion()
+        /**
+         * Prueba la conexión a la base Oracle.
+         */
+        public static bool ProbarConexion()
         {
-            using OracleConnection conn = OracleDb.GetConnection();
-            conn.Open();
+            try
+            {
+                using (OracleConnection conn = Administracion.Datos.OracleDB.CrearConexion())
+                {
+                    conn.Open();
+                    return true;
+                }
+            }
+            catch
+            {
+                return false;
+            }
         }
     }
 }

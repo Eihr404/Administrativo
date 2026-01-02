@@ -1,5 +1,5 @@
 ﻿using Oracle.ManagedDataAccess.Client;
-using Administracion.Data;
+using Administracion.Datos;
 using Administracion.DP;
 using System.Collections.Generic;
 using System;
@@ -15,7 +15,7 @@ namespace Administracion.MD
         {
             List<ProveedorDP> lista = new();
 
-            using OracleConnection conn = OracleDb.GetConnection();
+            using OracleConnection conn = OracleDB.CrearConexion();
             conn.Open();
 
             string sql = @"SELECT

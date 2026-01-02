@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-    <StartupObject></StartupObject>
+    <StartupObject>Administracion.App</StartupObject>
     <ApplicationIcon>Carrito.ico</ApplicationIcon>
   </PropertyGroup>
 

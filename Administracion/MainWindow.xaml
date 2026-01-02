@@ -30,8 +30,12 @@
                 <MenuItem Header="MenuItem"/>
             </MenuItem>
             <MenuItem Header="Gestión de e-commerce
-                      ">
+                      " Click="MenuItem_Click">
                 <MenuItem Header="MenuItem"/>
+            </MenuItem>
+            <MenuItem Header="Gestión de proveedores
+          " Tag="Proveedores" Click="MenuItem_Click">
+                <MenuItem Header="Menu de Proveedores"/>
             </MenuItem>
         </Menu>
 

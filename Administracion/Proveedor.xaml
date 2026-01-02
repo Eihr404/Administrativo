@@ -1,0 +1,89 @@
+﻿<Window x:Class="Administracion.Proveedor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Proveedores"
+        Height="457"
+        Width="800"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- DataGrid de Proveedores -->
+        <DataGrid
+            x:Name="dgProveedores"
+            Grid.Row="0"
+            AutoGenerateColumns="False"
+            IsReadOnly="True"
+            SelectionMode="Single"
+            SelectionUnit="FullRow"
+            CanUserAddRows="False"
+            Margin="0,0,0,70">
+
+            <DataGrid.Columns>
+                <DataGridTextColumn
+                    Header="ID"
+                    Binding="{Binding IdProveedor}"
+                    Width="Auto"/>
+
+                <DataGridTextColumn
+                    Header="Nombre"
+                    Binding="{Binding Nombre}"
+                    Width="*"/>
+
+                <DataGridTextColumn
+                    Header="RUC"
+                    Binding="{Binding Ruc}"
+                    Width="*"/>
+
+                <DataGridTextColumn
+                    Header="Teléfono"
+                    Binding="{Binding Telefono}"
+                    Width="*"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <!-- Botones de acción -->
+        
+        <StackPanel
+            Orientation="Horizontal"
+            HorizontalAlignment="Right" 
+            Grid.RowSpan="2" 
+     
+            VerticalAlignment="Bottom">
+
+            <Button
+                Content="Crear"
+                Width="90"
+                Margin="5"/>
+
+            <Button
+                Content="Editar"
+                Width="90"
+                Margin="5"/>
+
+            <Button
+                Content="Eliminar"
+                Width="90"
+                Margin="5"/>
+
+            
+            <StackPanel Orientation="Vertical" Grid.RowSpan="2">
+                <Label Content="Ingrese una Cedula/Ruc para buscar"/>
+                <TextBox TextWrapping="Wrap" Text="" Width="192" Margin="2" Height="25"/>
+
+            </StackPanel>
+            <Button Content="Buscar" Width="90"/>
+        </StackPanel>
+
+            
+            
+
+
+    </Grid>
+
+</Window>
+

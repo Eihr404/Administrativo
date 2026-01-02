@@ -20,5 +20,22 @@ namespace Administracion
         {
             InitializeComponent();
         }
+
+        /* Función encargada de manejar el comportamiento por click, de los elementos 
+        presentes en el menu de inicio */
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            if (sender is not MenuItem item || item.Tag == null)
+                return;
+
+            switch (item.Tag.ToString())
+            {
+                // En caso de dar click a opción proveedores, muestra la ventana proveedores
+                case "Proveedores":
+                    new Proveedor().Show();
+                    break;
+            }
+        }
     }
 }

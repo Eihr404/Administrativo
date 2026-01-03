@@ -17,7 +17,7 @@ namespace Administracion.MD
 
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
-                string sql = "SELECT CAT_CODIGO, CAT_NOMBRE FROM CATEGORIA ORDER BY CAT_CODIGO ASC";
+                string sql = "SELECT CAT_CODIGO, CAT_DESCRIPCION FROM CATEGORIA ORDER BY CAT_CODIGO ASC";
                 OracleCommand cmd = new OracleCommand(sql, conn);
 
                 try
@@ -30,7 +30,7 @@ namespace Administracion.MD
                             lista.Add(new CategoriaDP
                             {
                                 Codigo = reader["CAT_CODIGO"].ToString(),
-                                Descripcion = reader["CAT_NOMBRE"].ToString()
+                                Descripcion = reader["CAT_DESCRIPCION"].ToString()
                             });
                         }
                     }

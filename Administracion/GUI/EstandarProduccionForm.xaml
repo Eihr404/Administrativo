@@ -10,9 +10,9 @@
                       SelectedValuePath="MtpCodigo"/>
 
             <TextBlock Text="Producto:"/>
-            <ComboBox x:Name="cmbProducto" Margin="0,5,0,15" 
-                      DisplayMemberPath="ProNombre" 
-                      SelectedValuePath="ProCodigo"/>
+            <ComboBox x:Name="cmbProducto" 
+                      DisplayMemberPath="Nombre" 
+                      SelectedValuePath="Codigo"/>
 
             <TextBlock Text="Cantidad Necesaria:"/>
             <TextBox x:Name="txtCantidad" Margin="0,5,0,15"/>

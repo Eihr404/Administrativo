@@ -34,7 +34,7 @@ namespace Administracion.DP
 
         public int InsertarDP()
         {
-            return modelo.IngresarMD(this); // Se envía a sí mismo como objeto
+            return modelo.IngresarMD(this); 
         }
 
         public int ActualizarDP()

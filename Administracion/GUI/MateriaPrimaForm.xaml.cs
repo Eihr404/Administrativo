@@ -1,4 +1,5 @@
-﻿using Administracion.DP;
+﻿using Administracion.Datos;
+using Administracion.DP;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,30 +24,23 @@ namespace Administracion.GUI
         public MateriaPrimaDP Resultado { get; set; }
         private bool esModificacion = false;
 
-        // Constructor para INSERTAR
         public MateriaPrimaForm()
         {
             InitializeComponent();
-            this.Title = "Nuevo Registro de Materia Prima";
-
-            // 1. Cargamos el ComboBox al abrir la ventana
+            this.Title = OracleDB.GetConfig("titulo.formulario.nuevo");
             CargarUnidades();
         }
 
-        // Constructor para MODIFICAR
         public MateriaPrimaForm(MateriaPrimaDP datosExistentes) : this()
         {
             esModificacion = true;
-            this.Title = "Modificar Materia Prima";
+            this.Title = OracleDB.GetConfig("titulo.formulario.editar");
 
             txtCodigo.Text = datosExistentes.MtpCodigo;
             txtCodigo.IsEnabled = false;
-
             txtNombre.Text = datosExistentes.MtpNombre;
             txtDescripcion.Text = datosExistentes.MtpDescripcion;
             txtPrecio.Text = datosExistentes.MtpPrecioCompra.ToString();
-
-            // 2. Seleccionar el ítem en el ComboBox usando el valor que viene de la BD
             cmbUnidadMedida.SelectedValue = datosExistentes.UmeCodigo;
 
             Resultado = datosExistentes;
@@ -57,12 +51,12 @@ namespace Administracion.GUI
             try
             {
                 UnidadMedidaDP unidad = new UnidadMedidaDP();
-                // Llama al método que creamos en el DP para traer los códigos de Oracle
                 cmbUnidadMedida.ItemsSource = unidad.ConsultarTodos();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error al cargar unidades de medida: " + ex.Message);
+                // Uso de error.general
+                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
             }
         }
 
@@ -70,26 +64,24 @@ namespace Administracion.GUI
         {
             try
             {
-                // 3. Validación: Incluimos el ComboBox en la validación obligatoria
+                // 1. Validación usando error.validacion del .properties
                 if (string.IsNullOrWhiteSpace(txtCodigo.Text) ||
                     string.IsNullOrWhiteSpace(txtNombre.Text) ||
                     cmbUnidadMedida.SelectedValue == null)
                 {
-                    MessageBox.Show("Por favor, complete Código, Nombre y seleccione una Unidad de Medida.");
+                    MessageBox.Show(OracleDB.GetConfig("error.validacion"),
+                                    OracleDB.GetConfig("titulo.confirmacion"),
+                                    MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
-                double precioAnterior = 0;
-                if (esModificacion && Resultado != null)
-                {
-                    precioAnterior = Resultado.MtpPrecioCompra;
-                }
+                double precioAnterior = (esModificacion && Resultado != null)
+                                        ? Resultado.MtpPrecioCompra
+                                        : 0;
 
-                // 4. Creamos el objeto Resultado capturando los datos de la interfaz
                 Resultado = new MateriaPrimaDP
                 {
                     MtpCodigo = txtCodigo.Text.Trim(),
-                    // USAMOS el valor seleccionado del ComboBox (SelectedValue)
                     UmeCodigo = cmbUnidadMedida.SelectedValue.ToString(),
                     MtpNombre = txtNombre.Text.Trim(),
                     MtpDescripcion = txtDescripcion.Text.Trim(),
@@ -101,11 +93,12 @@ namespace Administracion.GUI
             }
             catch (FormatException)
             {
-                MessageBox.Show("El precio debe ser un valor numérico válido (use coma o punto según su región).");
+                MessageBox.Show(OracleDB.GetConfig("error.formato.numerico"),
+                        "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error: " + ex.Message);
+                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
             }
         }
 

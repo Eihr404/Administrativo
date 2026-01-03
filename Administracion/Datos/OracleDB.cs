@@ -115,5 +115,25 @@ namespace Administracion.Datos
 
             return props[key];
         }
+        public static string GetConfig(string llave)
+        {
+            try
+            {
+                // Reutilizamos el método que ya tienes para leer el archivo
+                // Nota: Asegúrate de que la ruta coincida con la que usas en CrearConexion
+                string ruta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Datos", "Paths.properties");
+
+                var lineas = File.ReadAllLines(ruta);
+                foreach (var linea in lineas)
+                {
+                    if (linea.Trim().StartsWith(llave + "="))
+                    {
+                        return linea.Split('=', 2)[1].Trim();
+                    }
+                }
+            }
+            catch { }
+            return $"[{llave} no encontrada]";
+        }
     }
 }

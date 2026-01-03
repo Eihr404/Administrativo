@@ -14,21 +14,21 @@ namespace Administracion.Datos
          */
         public static OracleConnection CrearConexion()
         {
-            // Read configured file name (may be null)
+            /* Leer el archivo de configuración */
             string configured = ConfigurationManager.AppSettings["propertiesFile"];
 
-            // If configured references the old Path.properties name, map it to Conexion.properties
+            /* If configured references the old Path.properties name, map it to Conexion.properties */
             if (!string.IsNullOrEmpty(configured) && configured.IndexOf("Paths.properties", StringComparison.OrdinalIgnoreCase) >= 0)
             {
                 configured = configured.Replace("Path.properties", "Paths.properties", StringComparison.OrdinalIgnoreCase);
             }
 
-            // Prepare candidate paths (relative to app base dir)
+            /* Preparar paths candidatas */
             var candidates = new List<string>();
             if (!string.IsNullOrWhiteSpace(configured))
                 candidates.Add(configured);
 
-            // Common names/locations to try (project has the file under Datos\Paths.properties or at app root as Conexion.properties)
+            /* Nombres comunes para probar */
             candidates.Add(Path.Combine("Datos", "Paths.properties"));
             candidates.Add("Paths.properties");
 
@@ -37,7 +37,7 @@ namespace Administracion.Datos
             foreach (var candidate in candidates)
             {
                 string finalCandidate = candidate;
-                // If candidate is rooted, use as-is, otherwise combine with base directory
+                /* Si es al candidato es la root, usarlo directamente, Caso contrario combinarlo con el directorio */
                 if (!Path.IsPathRooted(finalCandidate))
                     finalCandidate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, finalCandidate);
 
@@ -81,7 +81,7 @@ namespace Administracion.Datos
         {
             string finalPath = propertiesPath;
 
-            // If a relative path was provided, make it absolute relative to the app base directory
+            /*  Si un path relativo fue proporcionado, hacerlo absoluto relativo al directorio base de la app */
             if (!Path.IsPathRooted(finalPath))
                 finalPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, finalPath);
 

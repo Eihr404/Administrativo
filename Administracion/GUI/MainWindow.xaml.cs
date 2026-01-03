@@ -76,6 +76,10 @@ namespace Administracion.GUI
                 case "Clientes":
                     MainContent.Content = new Cliente();
                     break;
+                case "MateriaPrima":
+                    MainContent.Content = new MateriaPrima();
+                    break;
+                    
             }
         }
     }

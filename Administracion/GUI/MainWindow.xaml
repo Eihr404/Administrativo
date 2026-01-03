@@ -23,6 +23,9 @@
             <MenuItem Header="Gestión de clientes"
                       Tag="Clientes"
                       Click="Navigation_Click"/>
+            <MenuItem Header="Gestión de materia prima"
+                      Tag="MateriaPrima"
+                      Click="Navigation_Click"/>
         </Menu>
 
         <!-- CONTENEDOR DE PESTAÑAS -->

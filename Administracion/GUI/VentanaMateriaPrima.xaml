@@ -1,0 +1,52 @@
+﻿<UserControl x:Class="Administracion.GUI.MateriaPrima"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Administracion.GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid x:Name="mtpGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Botones de acción -->
+        <StackPanel x:Name="spMateriaPrima" HorizontalAlignment="Left" VerticalAlignment="Center" Orientation="Horizontal" Grid.RowSpan="1">
+            <TextBox x:Name="mtpTxtblBuscarCodigo" TextWrapping="Wrap" Width="250"/>
+            <Button x:Name="mtpBtnConsultar" Content="Consultar" Margin="5,0,0,0" Click="mtpBtnConsultar_Click"/>
+            <Button x:Name="mtpBtnIngresar" Content="Ingresar" Margin="5,0,0,0" Click="mtpBtnIngresar_Click"/>
+            <Button x:Name="mtpBtnModificar" Content="Modificar" Margin="5,0,0,0"/>
+            <Button x:Name="mtpBtnEliminar" Content="Eliminar" Margin="5,0,0,0" Click="mtpBtnEliminar_Click"/>
+        </StackPanel>
+
+        <!-- DataGrid de Materia Prima -->
+        <DataGrid x:Name="mtpDatGri" 
+                  Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  SelectionMode="Single" 
+                  IsReadOnly="True" Height="400">
+            <DataGrid.Columns>
+                <DataGridTextColumn x:Name="mtpDatGriColCodigo" Header="Código"
+                                    Binding="{Binding MtpCodigo}"
+                                    Width="Auto"/>
+                <DataGridTextColumn x:Name="mtpDatGriColUniMed" Header="Unidad de medida"
+                    Binding="{Binding UmeCodigo}"
+                    Width="Auto"/>
+                <DataGridTextColumn x:Name="mtpDatGriColNombre" Header="Nombre"
+                    Binding="{Binding MtpNombre}"
+                    Width="Auto"/>
+                <DataGridTextColumn x:Name="mtpDatGriColDescrip" Header="Descripción"
+                    Binding="{Binding MtpDescripcion}"
+                    Width="Auto"/>
+                <DataGridTextColumn x:Name="mtpDatGriColPrecioAnt" Header="Precio de compra anterior"
+                    Binding="{Binding MtpPrecioCompraAnt}"
+                    Width="Auto"/>
+                <DataGridTextColumn x:Name="mtpDatGriColPrecio" Header="Precio de compra"
+                    Binding="{Binding MtpPrecioCompra}"
+                    Width="Auto"/>
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</UserControl>

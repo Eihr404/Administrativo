@@ -20,6 +20,9 @@
             <MenuItem Header="Gestión de proveedores"
                       Tag="Proveedores"
                       Click="Navigation_Click"/>
+            <MenuItem Header="Gestión de productos"
+                      Tag="Productos"
+                      Click="Navigation_Click"/>
             <MenuItem Header="Gestión de clientes"
                       Tag="Clientes"
                       Click="Navigation_Click"/>

@@ -16,6 +16,9 @@
 
   <ItemGroup>
     <Content Include="Carrito.ico" />
+    <Content Include="Datos\Paths.properties">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Datos\Conexion.properties">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

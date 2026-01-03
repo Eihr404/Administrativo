@@ -1,0 +1,145 @@
+﻿<UserControl x:Class="Administracion.GUI.FormularioProductoIngresar"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Administracion.GUI"
+             mc:Ignorable="d" 
+             d:DesignHeight="600
+             " d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Style x:Key="TextBoxPlaceholder" TargetType="TextBox">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="Gray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Grid>
+                            <Border BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Background="{TemplateBinding Background}">
+                                <Grid>
+                                    <ScrollViewer x:Name="PART_ContentHost"/>
+                                    <TextBlock x:Name="Watermark"
+                                       Text="{TemplateBinding Tag}"
+                                       Foreground="Gray"
+                                       Margin="0,0,0,0"
+                                       IsHitTestVisible="False"
+                                       Visibility="Collapsed"/>
+                                </Grid>
+                            </Border>
+                        </Grid>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="Watermark"
+                                Property="Visibility"
+                                Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="Watermark"
+                                Property="Visibility"
+                                Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <StackPanel x:Name="prdStakFormulario"
+                Width="300"
+                HorizontalAlignment="Center">
+
+            <Label x:Name="prdLablIndicaciones"
+               Content="Ingresar nuevo producto"
+               HorizontalAlignment="Center"
+               Padding="0,0,0,5"
+               FontSize="14"/>
+
+            <Label Content="Código de producto"/>
+            <TextBox x:Name="prdTxtBCodigo"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Ej: PRD001"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Categoría del producto"/>
+            <ComboBox x:Name="prdComBCategoria"
+                  Width="300"
+                  Margin="0,0,0,5"
+                  IsEditable="True"
+                  Text="Seleccione una categoría"/>
+
+            <Label Content="Clasificación del producto"/>
+            <ComboBox x:Name="prdComBClasificacion"
+                  Width="300"
+                  Margin="0,0,0,5"
+                  IsEditable="True"
+                  Text="Seleccione una clasificación"/>
+
+            <Label Content="Unidad de medida del producto"/>
+            <ComboBox x:Name="prdComBUnidadM"
+                  Width="300"
+                  Margin="0,0,0,5"
+                  IsEditable="True"
+                  Text="Seleccione una unidad"/>
+
+            <Label Content="Nombre del producto"/>
+            <TextBox x:Name="prdTxtBNombre"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Nombre del producto"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Descripción del producto"/>
+            <TextBox x:Name="prdTxtBDescripcion"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Descripción del producto"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Precio de venta actual"/>
+            <TextBox x:Name="prdTxtBPrecioVent"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Ej: 10.50"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Utilidad del producto"/>
+            <TextBox x:Name="prdTxtBUtilidad"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Ej: 2.50"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Imagen del producto"/>
+            <TextBox x:Name="prdTxtBImagen"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Nombre o ruta de la imagen"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+
+            <Label Content="Texto alternativo de la imagen"/>
+            <TextBox x:Name="prdTxtBAltImagen"
+                 Style="{StaticResource TextBoxPlaceholder}"
+                 Tag="Descripción de la imagen"
+                 Width="300"
+                 Margin="0,0,0,5"/>
+            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+                <Button x:Name="prdBtnGuardar"
+                Content="Guardar"
+                HorizontalAlignment="Center" Padding="3,3,3,3" Margin="0,0,10,0"/>
+                <Button x:Name="prdBtnCancelar"
+                Content="Cancelar"
+                HorizontalAlignment="Center" Padding="3,3,3,3"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

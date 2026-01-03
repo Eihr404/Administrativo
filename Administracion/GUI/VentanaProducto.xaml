@@ -34,8 +34,8 @@
                 <DataGridTextColumn x:Name="prdDatGriColCateg" Header="Categoría"
                     Binding="{Binding CategoriaDescripcion}"
                     Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColClase" Header="Clase"
-                    Binding="{Binding ClaseDescripcion}"
+                <DataGridTextColumn x:Name="prdDatGriColClase" Header="Clasificacion"
+                    Binding="{Binding ClasificacionDescripcion}"
                     Width="Auto"/>
                 <DataGridTextColumn x:Name="prdDatGriColUniMed" Header="Unidad de medida"
                     Binding="{Binding UnidadMedidaDescripcion}"

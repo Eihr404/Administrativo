@@ -35,7 +35,7 @@ namespace Administracion.MD
                         });
                     }
                 }
-                catch (Exception ex) { throw new Exception("Error en ConsultarTodosMD: " + ex.Message); }
+                catch (Exception ex) { throw new Exception("Error en ConsultarAllMD: " + ex.Message); }
             }
             return lista;
         }

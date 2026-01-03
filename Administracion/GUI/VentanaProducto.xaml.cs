@@ -43,6 +43,7 @@ namespace Administracion.GUI
                 MessageBox.Show("Error al cargar productos: " + ex.Message);
             }
         }
+        /* Evento click del boton ingresar producto */
         private void prdBtnIngresar_Click(object sender, RoutedEventArgs e)
         {
             ProductoForm formulario = new ProductoForm();
@@ -64,7 +65,7 @@ namespace Administracion.GUI
                 }
             }
         }
-
+        /* Evento click del boton consultar producto */
         private void prdBtnConsultar_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -91,7 +92,7 @@ namespace Administracion.GUI
                 MessageBox.Show("Error al consultar: " + ex.Message);
             }
         }
-
+        /* Evento click del boton modificar producto */
         private void prdBtnModificar_Click(object sender, RoutedEventArgs e)
         {
             if (prdDatGri.SelectedItem is not ProductoDP seleccionado)
@@ -119,7 +120,7 @@ namespace Administracion.GUI
                 }
             }
         }
-
+        /* Evento click del boton eliminar producto */
         private void prdBtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             if (prdDatGri.SelectedItem is not ProductoDP seleccionado)

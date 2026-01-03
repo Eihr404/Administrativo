@@ -70,27 +70,18 @@
 
             <Label Content="Categoría del producto"/>
             <ComboBox x:Name="prdComBCategoria"
-              Width="300"
-              Margin="0,0,0,5"
-              IsEditable="True"
-              Text="Seleccione una categoría"
-              SelectionChanged="Combo_MostrarDescripcion"/>
+                      Width="300"
+                      Margin="0,0,0,5"/>
 
             <Label Content="Clasificación del producto"/>
             <ComboBox x:Name="prdComBClasificacion"
-              Width="300"
-              Margin="0,0,0,5"
-              IsEditable="True"
-              Text="Seleccione una clasificación"
-              SelectionChanged="Combo_MostrarDescripcion"/>
+                      Width="300"
+                      Margin="0,0,0,5"/>
 
             <Label Content="Unidad de medida del producto"/>
             <ComboBox x:Name="prdComBUnidadM"
-              Width="300"
-              Margin="0,0,0,5"
-              IsEditable="True"
-              Text="Seleccione una unidad" 
-              SelectionChanged="Combo_MostrarDescripcion"/>
+                      Width="300"
+                      Margin="0,0,0,5"/>
 
             <Label Content="Nombre del producto"/>
             <TextBox x:Name="prdTxtBNombre"
@@ -133,14 +124,12 @@
              Tag="Descripción de la imagen"
              Width="300"
              Margin="0,0,0,5"/>
-            <StackPanel HorizontalAlignment="Right" Orientation="Horizontal">
+            <UniformGrid>
                 <Button x:Name="prdBtnGuardar"
-            Content="Guardar"
-            HorizontalAlignment="Center" Padding="3,3,3,3" Margin="0,0,10,0" Click="prdBtnGuardar_Click"/>
+                        Content="Guardar" Padding="3,3,3,3" Margin="0,0,10,0" Click="prdBtnGuardar_Click"/>
                 <Button x:Name="prdBtnCancelar"
-            Content="Cancelar"
-            HorizontalAlignment="Center" Padding="3,3,3,3" Click="prdBtnCancelar_Click"/>
-            </StackPanel>
+                        Content="Cancelar" Padding="3,3,3,3" Click="prdBtnCancelar_Click"/>
+            </UniformGrid>
         </StackPanel>
     </Grid>
 </Window>

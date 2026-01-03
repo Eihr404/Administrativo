@@ -10,7 +10,7 @@ namespace Administracion.MD
     public class MateriaPrimaMD
     {
         /* Método par colsulta general */
-        public List<MateriaPrimaDP> ConsultaGeneralMD()
+        public List<MateriaPrimaDP> ConsultarAllMD()
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
             string query = "SELECT * FROM MATERIA_PRIMA";
@@ -35,12 +35,12 @@ namespace Administracion.MD
                         });
                     }
                 }
-                catch (Exception ex) { throw new Exception("Error en ConsultarTodosMD: " + ex.Message); }
+                catch (Exception ex) { throw new Exception("Error en ConsultarAllMD: " + ex.Message); }
             }
             return lista;
         }
         /* Método para consulta por parámetro (código) */
-        public List<MateriaPrimaDP> ConsultaPorParametroMD(string codigo)
+        public List<MateriaPrimaDP> ConsultarByCodMD(string codigo)
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
             string query = "SELECT * FROM MATERIA_PRIMA WHERE MTP_CODIGO = :cod";

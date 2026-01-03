@@ -9,15 +9,17 @@ using System.Threading.Tasks;
 
 namespace Administracion.MD
 {
-    public class UnidadMedidaMD
+    internal class CategoriaMD
     {
-        public List<UnidadMedidaDP> ConsultarTodosMD()
+        public CategoriaMD() { }
+        /* Consulta todas las categorias existentes en la base de datos */
+        internal List<CategoriaDP> ConsultarAllMD()
         {
-            List<UnidadMedidaDP> lista = new List<UnidadMedidaDP>();
+            List<CategoriaDP> lista = new List<CategoriaDP>();
 
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
-                string sql = "SELECT UME_CODIGO, UME_DESCRIPCION FROM UNIDAD_MEDIDA ORDER BY UME_CODIGO ASC";
+                string sql = "SELECT CAT_CODIGO, CAT_DESCRIPCION FROM CATEGORIA ORDER BY CAT_CODIGO ASC";
                 OracleCommand cmd = new OracleCommand(sql, conn);
 
                 try
@@ -27,17 +29,17 @@ namespace Administracion.MD
                     {
                         while (reader.Read())
                         {
-                            lista.Add(new UnidadMedidaDP
+                            lista.Add(new CategoriaDP
                             {
-                                UmeCodigo = reader["UME_CODIGO"].ToString(),
-                                UmeDescripcion = reader["UME_DESCRIPCION"].ToString()
+                                Codigo = reader["CAT_CODIGO"].ToString(),
+                                Descripcion = reader["CAT_DESCRIPCION"].ToString()
                             });
                         }
                     }
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Error en UnidadMedidaMD: " + ex.Message);
+                    throw new Exception("Error en CategoriaMD: " + ex.Message);
                 }
             }
             return lista;

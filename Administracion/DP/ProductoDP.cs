@@ -4,36 +4,27 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace Administracion.DP
 {
-    internal class ProductoDP
+    public class ProductoDP
     {
         private ProductoMD productoMD = new ProductoMD();
-        public ProductoDP() {
-            Codigo = "Sin codigo";
-            Categoria = "Sin categoría";
-            Clasificacion = "Sin clasificación";
-            UnidadMedida = "Sin unidad de medida";
-            Nombre = "Sin nombre";
-            Descripcion = "Sin descripción";
-            PrecioVenta = 0;
-            PrecioVentaAnt = 0;
-            Utilidad = 0;
-            Imagen = "Sin imagen de producto";
-            AltTextImagen = "Sin texto alternativo";
-        }
-        public string Codigo { get; set; } = "Sin codigo";
-        public string Categoria { get; set; } = "Sin categoría";
-        public string Clasificacion { get; set; } = "Sin clasificación";
-        public string UnidadMedida { get; set; } = "Sin unidad de medida";
-        public string Nombre { get; set; } = "Sin nombre";
-        public string Descripcion { get; set; } = "Sin descripción";
+        public string Codigo { get; set; } = string.Empty;
+        public string CategoriaCodigo { get; set; } = string.Empty;
+        public string CategoriaDescripcion { get; set; } = string.Empty;
+        public string ClasificacionCodigo { get; set; } = string.Empty;
+        public string ClasificacionDescripcion { get; set; } = string.Empty;
+        public string UnidadMedidaCodigo { get; set; } = string.Empty;
+        public string UnidadMedidaDescripcion { get; set; } = string.Empty;
+        public string Nombre { get; set; } = string.Empty;
+        public string Descripcion { get; set; } = string.Empty;
         public double PrecioVenta { get; set; } = 0;
         public double PrecioVentaAnt { get; set; } = 0;
         public double Utilidad { get; set; } = 0;
-        public string Imagen { get; set; } = "Sin imagen de producto";
-        public string AltTextImagen { get; set; } = "Sin texto alternativo";
+        public string Imagen { get; set; } = string.Empty;
+        public string AltTextImagen { get; set; } = string.Empty;
 
         /* Ingresa un nuevo producto a la base de datos */
         public bool IngresarDP()
@@ -42,35 +33,33 @@ namespace Administracion.DP
         }
 
         /* Modifica un producto en la base de datos */
-        public void ModificarDP()
+        public bool ModificarDP()
         {
-
+            return productoMD.ModificarMD(this);
         }
 
         /* Elimina un producto de la base de datos */
-        public void EliminarDP()
+        public bool EliminarDP()
         {
-
+            return productoMD.EliminarMD(this.Codigo);
         }
 
         /* Consulta un producto por su código */
-        public void ConsultarByCodDP()
+        public ProductoDP ConsultarByCodDP()
         {
-
+            return productoMD.ConsultarByCodMD(this.Codigo);
         }
 
         /* Consulta los productos en la base de datos */
         public List<ProductoDP> ConsultarAllDP()
         {
-            List<ProductoDP> productos = new List<ProductoDP>();
-            productos = productoMD.ConsultarAllMD();
-            return productos;
+            return productoMD.ConsultarAllMD() ?? new List<ProductoDP>();
         }
 
         /* Verifica si el producto existe en la base de datos para evitar repetidos*/
-        public bool VerificarDP(string codigo)
+        public bool VerificarDP()
         {
-            return productoMD.VerificarMD(codigo);
+            return productoMD.VerificarMD(this.Codigo);
         }
     }
 }

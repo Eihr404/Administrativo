@@ -1,28 +1,18 @@
 ﻿using Administracion.Datos;
-using Administracion.DP; // Donde están tus Getters y Setters
-using Administracion.MD; // Donde está tu conexión a Oracle
+using Administracion.DP;
+using Administracion.MD;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace Administracion.GUI
 {
-    public partial class MateriaPrima : UserControl
+    public partial class EstandarProduccion : UserControl
     {
-        MateriaPrimaMD modelo = new MateriaPrimaMD();
+        EstandarProduccionMD modelo = new EstandarProduccionMD();
 
-        public MateriaPrima()
+        public EstandarProduccion()
         {
             InitializeComponent();
             CargarDatosIniciales();
@@ -32,47 +22,58 @@ namespace Administracion.GUI
         {
             try
             {
-                MateriaPrimaDP mensajeroDP = new MateriaPrimaDP();
-                mtpDatGri.ItemsSource = mensajeroDP.ConsultarAllDP();
+                EstandarProduccionDP mensajeroDP = new EstandarProduccionDP();
+                edpDatGri.ItemsSource = mensajeroDP.ConsultarAllDP();
             }
             catch (Exception ex)
             {
-                // Uso de error.general desde el properties
                 MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
             }
         }
 
-        private void mtpBtnConsultar_Click(object sender, RoutedEventArgs e)
+        private void edpBtnConsultar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MateriaPrimaDP mensajeroDP = new MateriaPrimaDP();
-                string codigoABuscar = mtpTxtblBuscarCodigo.Text.Trim();
-                List<MateriaPrimaDP> resultado;
+                EstandarProduccionDP mensajeroDP = new EstandarProduccionDP();
+                string textoBusqueda = edpTxtblBuscarCodigo.Text.Trim();
 
-                resultado = string.IsNullOrEmpty(codigoABuscar)
-                    ? mensajeroDP.ConsultarAllDP()
-                    : mensajeroDP.ConsultarByCodDP(codigoABuscar);
+                // Inicializamos la lista como vacía por defecto
+                List<EstandarProduccionDP> resultado = new List<EstandarProduccionDP>();
 
-                mtpDatGri.ItemsSource = resultado;
-
-                if (resultado.Count == 0 && !string.IsNullOrEmpty(codigoABuscar))
+                if (string.IsNullOrWhiteSpace(textoBusqueda))
                 {
-                    MessageBox.Show(OracleDB.GetConfig("error.no_encontrado"),
-                    OracleDB.GetConfig("titulo.confirmacion"),
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    resultado = mensajeroDP.ConsultarAllDP();
+                }
+                else
+                {
+                    string[] partes = textoBusqueda.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Solo ejecutamos la consulta si hay exactamente 2 códigos
+                    if (partes.Length == 2)
+                    {
+                        // Agregamos el objeto único a la lista para evitar el error CS0029
+                        var item = mensajeroDP.ConsultarByCodDP(partes[0], partes[1]);
+                        if (item != null) resultado.Add(item);
+                    }
+                }
+
+                edpDatGri.ItemsSource = resultado;
+
+                if (resultado.Count == 0 && !string.IsNullOrWhiteSpace(textoBusqueda))
+                {
+                    MessageBox.Show(OracleDB.GetConfig("error.no_encontrado"));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
 
-        private void mtpBtnIngresar_Click(object sender, RoutedEventArgs e)
+        private void edpBtnIngresar_Click(object sender, RoutedEventArgs e)
         {
-            MateriaPrimaForm formulario = new MateriaPrimaForm();
+            EstandarProduccionForm formulario = new EstandarProduccionForm();
             formulario.Owner = Window.GetWindow(this);
 
             if (formulario.ShowDialog() == true)
@@ -81,11 +82,10 @@ namespace Administracion.GUI
                 {
                     if (formulario.Resultado.InsertarDP() > 0)
                     {
-                        // Mensaje de éxito centralizado
                         MessageBox.Show(OracleDB.GetConfig("exito.guardar"),
                                         OracleDB.GetConfig("titulo.confirmacion"),
                                         MessageBoxButton.OK, MessageBoxImage.Information);
-                        mtpBtnConsultar_Click(null, null);
+                        CargarDatosIniciales();
                     }
                 }
                 catch (Exception ex)
@@ -95,11 +95,11 @@ namespace Administracion.GUI
             }
         }
 
-        private void mtpBtnModificar_Click(object sender, RoutedEventArgs e)
+        private void edpBtnModificar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MateriaPrimaDP seleccionado = mtpDatGri.SelectedItem as MateriaPrimaDP;
+                EstandarProduccionDP seleccionado = edpDatGri.SelectedItem as EstandarProduccionDP;
 
                 if (seleccionado == null)
                 {
@@ -107,7 +107,7 @@ namespace Administracion.GUI
                     return;
                 }
 
-                MateriaPrimaForm formulario = new MateriaPrimaForm(seleccionado);
+                EstandarProduccionForm formulario = new EstandarProduccionForm(seleccionado);
                 formulario.Owner = Window.GetWindow(this);
 
                 if (formulario.ShowDialog() == true)
@@ -115,7 +115,7 @@ namespace Administracion.GUI
                     if (formulario.Resultado.ActualizarDP() > 0)
                     {
                         MessageBox.Show(OracleDB.GetConfig("exito.actualizar"));
-                        mtpBtnConsultar_Click(null, null);
+                        CargarDatosIniciales();
                     }
                 }
             }
@@ -125,11 +125,11 @@ namespace Administracion.GUI
             }
         }
 
-        private void mtpBtnEliminar_Click(object sender, RoutedEventArgs e)
+        private void edpBtnEliminar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MateriaPrimaDP seleccionado = mtpDatGri.SelectedItem as MateriaPrimaDP;
+                EstandarProduccionDP seleccionado = edpDatGri.SelectedItem as EstandarProduccionDP;
 
                 if (seleccionado == null)
                 {
@@ -137,7 +137,6 @@ namespace Administracion.GUI
                     return;
                 }
 
-                // Confirmación usando los mensajes del archivo .properties
                 var respuesta = MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"),
                                                OracleDB.GetConfig("titulo.confirmacion"),
                                                MessageBoxButton.YesNo, MessageBoxImage.Warning);
@@ -147,7 +146,7 @@ namespace Administracion.GUI
                     if (seleccionado.EliminarDP() > 0)
                     {
                         MessageBox.Show(OracleDB.GetConfig("exito.eliminar"));
-                        mtpBtnConsultar_Click(null, null);
+                        CargarDatosIniciales();
                     }
                 }
             }

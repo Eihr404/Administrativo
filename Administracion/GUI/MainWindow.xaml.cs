@@ -59,12 +59,6 @@ namespace Administracion.GUI
             }
         }
 
-        /*Función general para poder cambiar el contenido de la ventana principal*/
-        public void CambiarVista(UserControl vista)
-        {
-            MainContent.Content = vista;
-        }
-
         /* Función encargada de manejar el comportamiento por click, de los elementos 
         presentes en el menu de inicio */
         private void Navigation_Click(object sender, RoutedEventArgs e)
@@ -81,8 +75,15 @@ namespace Administracion.GUI
                 case "Clientes":
                     MainContent.Content = new Cliente();
                     break;
+
                 case "MateriaPrima":
                     MainContent.Content = new MateriaPrima();
+                    break;
+                case "Productos":
+                    MainContent.Content = new VentanaProducto();
+                    break;
+                case "EstandarProduccion":
+                    MainContent.Content = new EstandarProduccion();
                     break;
             }
         }

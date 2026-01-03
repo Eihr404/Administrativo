@@ -29,6 +29,9 @@
             <MenuItem Header="Gestión de materia prima"
                       Tag="MateriaPrima"
                       Click="Navigation_Click"/>
+            <MenuItem Header="Gestión de Estandar de Produccion"
+                      Tag="EstandarProduccion"
+                      Click="Navigation_Click"/>
         </Menu>
 
         <!-- CONTENEDOR DE PESTAÑAS -->

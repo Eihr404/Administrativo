@@ -20,16 +20,16 @@ namespace Administracion.DP
         private MateriaPrimaMD modelo = new MateriaPrimaMD();
 
         /*  Método para consulta general */
-        public List<MateriaPrimaDP> ConsultaGeneralDP()
+        public List<MateriaPrimaDP> ConsultarAllDP()
         {
             MateriaPrimaMD modelo = new MateriaPrimaMD();
-            return modelo.ConsultaGeneralMD();
+            return modelo.ConsultarAllMD();
         }
         /* Método para consulta por parámetro (código) */
-        public List<MateriaPrimaDP> ConsultaPorParametroDP(string codigo)
+        public List<MateriaPrimaDP> ConsultarByCodDP(string codigo)
         {
             MateriaPrimaMD modelo = new MateriaPrimaMD();
-            return modelo.ConsultaPorParametroMD(codigo);
+            return modelo.ConsultarByCodMD(codigo);
         }
         /* Métodos para Insertar */
         public int InsertarDP()

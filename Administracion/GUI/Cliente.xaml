@@ -18,12 +18,11 @@
                 <TextBox x:Name="TxtBuscar" Width="260" Margin="0,0,10,0"
               VerticalContentAlignment="Center"
               ToolTip="Buscar por usuario o cédula"/>
-                <Button Content="Buscar" Width="90" Click="BtnBuscar_Click" Margin="0,0,10,0"/>
-                <Button Content="Refrescar" Width="90" Click="BtnRefrescar_Click" Margin="0,0,10,0"/>
-                <Button Content="Bloquear/Activar" Width="130" Click="BtnToggleEstado_Click" Margin="0,0,10,0"/>
-                <Button Content="Cambiar rol" Width="110" Click="BtnCambiarRol_Click" Margin="0,0,10,0"/>
-                <Button Content="Ingresar" Width="90" Click="CliBtnIngresar" />
-            </StackPanel>
+            <Button Content="Consultar" Width="90" Click="BtnConsultar_Click" Margin="0,0,10,0"/>
+            <Button Content="Ingresar" Width="90" Click="CliBtnIngresar" Margin="0,0,10,0"/>
+            <Button Content="Eliminar" Width="90" Click="BtnToggleEstado_Click" Margin="0,0,10,0"/>
+            <Button Content="Modificar rol" Width="90" Click="BtnModificarRol_Click" Margin="0,0,10,0"/>
+        </StackPanel>
 
             <!-- Tabla -->
             <DataGrid x:Name="GridClientes"
@@ -40,49 +39,59 @@
             </DataGrid>
 
             <!-- Para panel -->
-            <Border x:Name="PanelNuevoCliente"
-             Grid.Row="2"
-             Margin="0,10,0,0"
-             Padding="10"
-             BorderBrush="Gray"
-             BorderThickness="1" 
-             Visibility="Collapsed">
+        <Border x:Name="PanelNuevoCliente"
+        Grid.Row="2"
+        Margin="0,10,0,0"
+        Padding="15"
+        BorderBrush="#CCC"
+        BorderThickness="1"
+        CornerRadius="6"
+        Background="#FAFAFA"
+        Visibility="Collapsed">
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
+            <StackPanel>
 
-                    <StackPanel Grid.Column="0">
-                        <TextBlock Text="Usuario"/>
-                        <TextBox x:Name="TxtUsrNombre"/>
+                <!-- TÍTULO -->
+                <TextBlock Text="REGISTRO DE CLIENTE"
+                   FontSize="15"
+                   FontWeight="Bold"
+                   HorizontalAlignment="Center"
+                   Margin="0,0,0,15"/>
 
-                        <TextBlock Text="Cédula" Margin="0,5,0,0"/>
-                        <TextBox x:Name="TxtCedula"/>
-                    </StackPanel>
+                <!-- USUARIO -->
+                <Label Content="Usuario:"/>
+                <TextBox x:Name="TxtUsrNombre" Margin="0,0,0,10"/>
 
-                    <StackPanel Grid.Column="1">
-                        <TextBlock Text="Contraseña"/>
-                        <TextBox x:Name="TxtPassword"/>
+                <!-- CÉDULA -->
+                <Label Content="Cédula:"/>
+                <TextBox x:Name="TxtCedula" Margin="0,0,0,10"/>
 
-                        <TextBlock Text="Rol" Margin="0,5,0,0"/>
-                        <ComboBox x:Name="CmbRol">
-                            <ComboBoxItem Content="CLIENTE"/>
-                            <ComboBoxItem Content="ADMIN"/>
-                        </ComboBox>
-                    </StackPanel>
+                <!-- CONTRASEÑA -->
+                <Label Content="Contraseña:"/>
+                <PasswordBox x:Name="TxtPassword" Margin="0,0,0,10"/>
 
-                    <StackPanel Grid.ColumnSpan="2"
-     Orientation="Horizontal"
-     HorizontalAlignment="Right"
-     Margin="0,10,0,0">
-                        <Button Content="Guardar" Width="90" Click="BtnGuardar_Click"/>
-                        <Button Content="Cancelar" Width="90" Margin="10,0,0,0"
-     Click="BtnCancelar_Click"/>
-                    </StackPanel>
-                </Grid>
-            </Border>
+                <!-- ROL -->
+                <Label Content="Rol:"/>
+                <ComboBox x:Name="CmbRol" Margin="0,0,0,15">
+                    <ComboBoxItem Content="CLIENTE"/>
+                    <ComboBoxItem Content="ADMIN"/>
+                </ComboBox>
+
+                <!-- BOTONES -->
+                <UniformGrid Columns="2">
+                    <Button Content="Guardar"
+                    Margin="5"
+                    Click="BtnGuardar_Click"
+                    Background="#DFF0D8"/>
+
+                    <Button Content="Cancelar"
+                    Margin="5"
+                    Click="BtnCancelar_Click"/>
+                </UniformGrid>
+
+            </StackPanel>
+        </Border>
+
     </Grid>
 
 </UserControl>

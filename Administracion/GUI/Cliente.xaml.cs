@@ -12,13 +12,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using Administracion.DP;
-using Administracion.MD;
 
 namespace Administracion.GUI
 {
     public partial class Cliente : UserControl
     {
-        private readonly ClienteMD clienteMd = new ClienteMD();
+        private readonly ClienteDPService clienteService = new ClienteDPService();
 
         public Cliente()
         {
@@ -33,7 +32,7 @@ namespace Administracion.GUI
         {
             try
             {
-                List<ClienteDP> data = clienteMd.ObtenerClientes();
+                List<ClienteDP> data = clienteService.ObtenerClientes();
                 GridClientes.ItemsSource = data;
             }
             catch (Exception ex)
@@ -53,23 +52,17 @@ namespace Administracion.GUI
             return GridClientes.SelectedItem as ClienteDP;
         }
 
-        private void BtnBuscar_Click(object sender, RoutedEventArgs e)
+        private void BtnConsultar_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 string texto = TxtBuscar.Text?.Trim() ?? "";
-                GridClientes.ItemsSource = clienteMd.BuscarClientes(texto);
+                GridClientes.ItemsSource = clienteService.BuscarClientes(texto);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error al buscar:\n" + ex.Message);
             }
-        }
-
-        private void BtnRefrescar_Click(object sender, RoutedEventArgs e)
-        {
-            TxtBuscar.Text = "";
-            CargarClientes();
         }
 
         private void BtnToggleEstado_Click(object sender, RoutedEventArgs e)
@@ -84,7 +77,7 @@ namespace Administracion.GUI
             try
             {
                 string nuevoEstado = cli.EstadoCodigo == "A" ? "I" : "A";
-                clienteMd.CambiarEstado(cli.UsrNombre, nuevoEstado);
+                clienteService.CambiarEstado(cli.UsrNombre, nuevoEstado);
                 CargarClientes();
             }
             catch (Exception ex)
@@ -93,7 +86,7 @@ namespace Administracion.GUI
             }
         }
 
-        private void BtnCambiarRol_Click(object sender, RoutedEventArgs e)
+        private void BtnModificarRol_Click(object sender, RoutedEventArgs e)
         {
             ClienteDP? cli = ClienteSeleccionado();
             if (cli == null)
@@ -109,7 +102,7 @@ namespace Administracion.GUI
 
             try
             {
-                clienteMd.CambiarRol(cli.UsrNombre, nuevoRol);
+                clienteService.CambiarRol(cli.UsrNombre, nuevoRol);
                 CargarClientes();
             }
             catch (Exception ex)
@@ -145,10 +138,10 @@ namespace Administracion.GUI
                     return;
                 }
 
-                clienteMd.InsertarCliente(
+                clienteService.InsertarCliente(
                     TxtUsrNombre.Text.Trim(),
                     TxtCedula.Text.Trim(),
-                    TxtPassword.Text.Trim(),
+                    TxtPassword.Password.Trim(),
                     ((ComboBoxItem)CmbRol.SelectedItem).Content.ToString()
                 );
 
@@ -164,7 +157,7 @@ namespace Administracion.GUI
         {
             TxtUsrNombre.Text = "";
             TxtCedula.Text = "";
-            TxtPassword.Text = "";
+            TxtPassword.Password = "";
             CmbRol.SelectedIndex = -1;
         }
 

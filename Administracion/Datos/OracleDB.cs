@@ -14,16 +14,52 @@ namespace Administracion.Datos
          */
         public static OracleConnection CrearConexion()
         {
-            string propertiesFile = ConfigurationManager.AppSettings["propertiesFile"]
-                                    ?? "Conexion.properties";
+            // Read configured file name (may be null)
+            string configured = ConfigurationManager.AppSettings["propertiesFile"];
 
-            var props = LeerProperties(propertiesFile);
+            // If configured references the old Path.properties name, map it to Conexion.properties
+            if (!string.IsNullOrEmpty(configured) && configured.IndexOf("Path.properties", StringComparison.OrdinalIgnoreCase) >= 0)
+            {
+                configured = configured.Replace("Path.properties", "Conexion.properties", StringComparison.OrdinalIgnoreCase);
+            }
 
-            string host = ObtenerValor(props, "db.host");
-            string port = ObtenerValor(props, "db.port");
-            string serviceName = ObtenerValor(props, "db.serviceName");
-            string user = ObtenerValor(props, "db.user");
-            string password = ObtenerValor(props, "db.password");
+            // Prepare candidate paths (relative to app base dir)
+            var candidates = new List<string>();
+            if (!string.IsNullOrWhiteSpace(configured))
+                candidates.Add(configured);
+
+            // Common names/locations to try (project has the file under Datos\Conexion.properties or at app root as Conexion.properties)
+            candidates.Add(Path.Combine("Datos", "Conexion.properties"));
+            candidates.Add("Conexion.properties");
+            candidates.Add(Path.Combine("Datos", "conexion.properties"));
+            candidates.Add("conexion.properties");
+
+            string foundPath = null;
+
+            foreach (var candidate in candidates)
+            {
+                string finalCandidate = candidate;
+                // If candidate is rooted, use as-is, otherwise combine with base directory
+                if (!Path.IsPathRooted(finalCandidate))
+                    finalCandidate = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, finalCandidate);
+
+                if (File.Exists(finalCandidate))
+                {
+                    foundPath = finalCandidate;
+                    break;
+                }
+            }
+
+            if (foundPath == null)
+                throw new FileNotFoundException("No se encontró el archivo de propiedades. Se intentaron: " + string.Join(", ", candidates));
+
+            var props = LeerProperties(foundPath);
+
+            string host = ObtenerValor(props, "db.host", Path.GetFileName(foundPath));
+            string port = ObtenerValor(props, "db.port", Path.GetFileName(foundPath));
+            string serviceName = ObtenerValor(props, "db.serviceName", Path.GetFileName(foundPath));
+            string user = ObtenerValor(props, "db.user", Path.GetFileName(foundPath));
+            string password = ObtenerValor(props, "db.password", Path.GetFileName(foundPath));
 
             string dataSource =
                 $"(DESCRIPTION=" +
@@ -45,10 +81,11 @@ namespace Administracion.Datos
 
         private static Dictionary<string, string> LeerProperties(string propertiesPath)
         {
-            string finalPath = Path.Combine(
-                AppDomain.CurrentDomain.BaseDirectory,
-                propertiesPath
-            );
+            string finalPath = propertiesPath;
+
+            // If a relative path was provided, make it absolute relative to the app base directory
+            if (!Path.IsPathRooted(finalPath))
+                finalPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, finalPath);
 
             if (!File.Exists(finalPath))
                 throw new FileNotFoundException(
@@ -59,7 +96,7 @@ namespace Administracion.Datos
 
             foreach (var line in File.ReadAllLines(finalPath))
             {
-                if (string.IsNullOrWhiteSpace(line) || line.StartsWith("#"))
+                if (string.IsNullOrWhiteSpace(line) || line.TrimStart().StartsWith("#"))
                     continue;
 
                 var parts = line.Split('=', 2);
@@ -73,10 +110,10 @@ namespace Administracion.Datos
          * Obtiene un valor requerido del diccionario.
          */
 
-        private static string ObtenerValor(Dictionary<string, string> props, string key)
+        private static string ObtenerValor(Dictionary<string, string> props, string key, string propertiesFileName)
         {
             if (!props.ContainsKey(key))
-                throw new Exception($"Falta el parámetro {key} en Conexion.properties");
+                throw new Exception($"Falta el parámetro {key} en {propertiesFileName}");
 
             return props[key];
         }

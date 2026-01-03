@@ -16,7 +16,7 @@ using Administracion.MD;
 
 namespace Administracion.GUI
 {
-    public partial class Cliente : Window
+    public partial class Cliente : UserControl
     {
         private readonly ClienteMD clienteMd = new ClienteMD();
 

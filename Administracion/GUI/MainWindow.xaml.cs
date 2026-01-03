@@ -71,17 +71,41 @@ namespace Administracion.GUI
             if (sender is not MenuItem item || item.Tag == null)
                 return;
 
-            switch (item.Tag.ToString())
+            string tag = item.Tag.ToString();
+
+            // Verificar si la pestaña ya está abierta
+            foreach (TabItem tab in MainTabControl.Items)
             {
-                // En caso de dar click a opción proveedores, muestra la ventana proveedores
-                case "Proveedores":
-                    new Proveedor().Show();
-                    break;
-                // En caso de dar click a opción clientes, muestra la ventana clientes
-                case "Clientes":
-                    new Cliente().Show();
-                    break;
+                if (tab.Tag?.ToString() == tag)
+                {
+                    MainTabControl.SelectedItem = tab;
+                    return;
+                }
             }
+
+            // Crear nueva pestaña
+            TabItem nuevaTab = new TabItem
+            {
+                Header = tag,
+                Tag = tag
+            };
+
+            switch (tag)
+            {
+                case "Proveedores":
+                    nuevaTab.Content = new Proveedor();
+                    break;
+
+                case "Clientes":
+                    nuevaTab.Content = new Cliente();
+                    break;
+
+                default:
+                    return;
+            }
+
+            MainTabControl.Items.Add(nuevaTab);
+            MainTabControl.SelectedItem = nuevaTab;
         }
     }
 }

@@ -17,7 +17,7 @@ namespace Administracion.GUI
     /// <summary>
     /// Lógica de interacción para Proveedor.xaml
     /// </summary>
-    public partial class Proveedor : Window
+    public partial class Proveedor : UserControl
     {
         public Proveedor()
         {

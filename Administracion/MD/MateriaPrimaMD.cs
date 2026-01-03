@@ -9,7 +9,7 @@ namespace Administracion.MD
 {
     public class MateriaPrimaMD
     {
-        // MÉTODO PARA CONSULTAR GENERAL
+        /* Método par colsulta general */
         public List<MateriaPrimaDP> ConsultaGeneralMD()
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
@@ -39,7 +39,7 @@ namespace Administracion.MD
             }
             return lista;
         }
-        // MÉTODO PARA CONSULTAR POR PARAMETRO (CODIGO)
+        /* Método para consulta por parámetro (código) */
         public List<MateriaPrimaDP> ConsultaPorParametroMD(string codigo)
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
@@ -71,7 +71,7 @@ namespace Administracion.MD
             return lista;
         }
 
-        // MÉTODO PARA INGRESAR (Recibe un DP)
+        /* Método para ingresar nueva materia prima */
         public int IngresarMD(MateriaPrimaDP dp)
         {
             string sql = "INSERT INTO MATERIA_PRIMA (MTP_CODIGO, UME_CODIGO, MTP_NOMBRE, MTP_DESCRIPCION, MTP_PRECIO_COMPRA_ANT, MTP_PRECIO_COMPRA) " +
@@ -88,12 +88,13 @@ namespace Administracion.MD
                 cmd.Parameters.Add(new OracleParameter("pact", dp.MtpPrecioCompra));
 
                 conn.Open();
-                return cmd.ExecuteNonQuery(); // Retorna filas afectadas
+                return cmd.ExecuteNonQuery();
             }
         }
+        /* Método para actualizar materia prima */
         public int ActualizarMD(MateriaPrimaDP dp)
         {
-            // Actualizamos nombre, unidad, descripción y precios basándonos en el código
+            /* Actualiza los datos de una materia prima existente */
             string sql = "UPDATE MATERIA_PRIMA SET UME_CODIGO = :uni, MTP_NOMBRE = :nom, " +
                          "MTP_DESCRIPCION = :des, MTP_PRECIO_COMPRA_ANT = :pant, " +
                          "MTP_PRECIO_COMPRA = :pact WHERE MTP_CODIGO = :cod";
@@ -113,7 +114,7 @@ namespace Administracion.MD
             }
         }
 
-        // MÉTODO PARA ELIMINAR
+        /* Método para eliminar materia prima */
         public int EliminarMD(string codigo)
         {
             string sql = "DELETE FROM MATERIA_PRIMA WHERE MTP_CODIGO = :cod";

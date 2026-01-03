@@ -9,39 +9,39 @@ namespace Administracion.DP
 {
     public class MateriaPrimaDP
     {
-        public string MtpCodigo { get; set; }          // MTP_CODIGO
-        public string UmeCodigo { get; set; }       // EMP_CEDULA_RUC
-        public string MtpNombre { get; set; }          // MTP_NOMBRE
-        public string MtpDescripcion { get; set; }     // MTP_DESCRIPCION
-        public double MtpPrecioCompraAnt { get; set; } // MTP_PRECIO_COMPRA_ANT
-        public double MtpPrecioCompra { get; set; }    // MTP_PRECIO_COMPRA
+        public string MtpCodigo { get; set; }
+        public string UmeCodigo { get; set; }
+        public string MtpNombre { get; set; }
+        public string MtpDescripcion { get; set; }
+        public double MtpPrecioCompraAnt { get; set; }
+        public double MtpPrecioCompra { get; set; }
 
-        // Instancia del MD para comunicación con DB
+        /* Instancia del MD para comunicación con DB */
         private MateriaPrimaMD modelo = new MateriaPrimaMD();
 
-        // MÉTODOS DE NEGOCIO QUE LLAMAN AL MD
+        /*  Método para consulta general */
         public List<MateriaPrimaDP> ConsultaGeneralDP()
         {
             MateriaPrimaMD modelo = new MateriaPrimaMD();
             return modelo.ConsultaGeneralMD();
         }
-
+        /* Método para consulta por parámetro (código) */
         public List<MateriaPrimaDP> ConsultaPorParametroDP(string codigo)
         {
             MateriaPrimaMD modelo = new MateriaPrimaMD();
             return modelo.ConsultaPorParametroMD(codigo);
         }
-
+        /* Métodos para Insertar */
         public int InsertarDP()
         {
             return modelo.IngresarMD(this); 
         }
-
+        /* Método para Actualizar */
         public int ActualizarDP()
         {
             return modelo.ActualizarMD(this);
         }
-
+        /* Método para Eliminar */
         public int EliminarDP()
         {
             return modelo.EliminarMD(this.MtpCodigo);

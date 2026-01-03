@@ -38,6 +38,38 @@ namespace Administracion.MD
             }
             return lista;
         }
+        public EstandarProduccionDP ConsultarByCodMD(string mtpCodigo, string proCodigo)
+        {
+            EstandarProduccionDP estandar = null;
+            string sql = "SELECT MTP_Codigo, PRO_Codigo, EDP_Descripcion, EDP_Cantidad " +
+             "FROM ESTANDAR_PRODUCCION " +
+             "WHERE MTP_Codigo = :mtp AND PRO_Codigo = :pro";
+
+            using (OracleConnection conn = OracleDB.CrearConexion())
+            {
+                conn.Open();
+                using (OracleCommand cmd = new OracleCommand(sql, conn))
+                {
+                    cmd.Parameters.Add(":mtp", mtpCodigo);
+                    cmd.Parameters.Add(":pro", proCodigo);
+
+                    using (OracleDataReader dr = cmd.ExecuteReader())
+                    {
+                        if (dr.Read())
+                        {
+                            estandar = new EstandarProduccionDP
+                            {
+                                MtpCodigo = dr.GetString(0),
+                                ProCodigo = dr.GetString(1),
+                                EdpDescripcion = dr.IsDBNull(2) ? "" : dr.GetString(2),
+                                EdpCantidad = dr.GetDouble(3)
+                            };
+                        }
+                    }
+                }
+            }
+            return estandar;
+        }
 
         public int IngresarMD(EstandarProduccionDP dp)
         {

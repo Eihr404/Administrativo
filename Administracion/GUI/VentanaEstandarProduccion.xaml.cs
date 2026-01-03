@@ -23,7 +23,7 @@ namespace Administracion.GUI
             try
             {
                 EstandarProduccionDP mensajeroDP = new EstandarProduccionDP();
-                edpDatGri.ItemsSource = mensajeroDP.ConsultaGeneralDP();
+                edpDatGri.ItemsSource = mensajeroDP.ConsultarAllDP();
             }
             catch (Exception ex)
             {
@@ -36,27 +36,38 @@ namespace Administracion.GUI
             try
             {
                 EstandarProduccionDP mensajeroDP = new EstandarProduccionDP();
-                string codigoABuscar = edpTxtblBuscarCodigo.Text.Trim();
-                List<EstandarProduccionDP> resultado;
+                string textoBusqueda = edpTxtblBuscarCodigo.Text.Trim();
 
-                // Si el buscador está vacío carga todo, si no, filtra (requiere método en MD)
-                resultado = string.IsNullOrEmpty(codigoABuscar)
-                    ? mensajeroDP.ConsultaGeneralDP()
-                    : mensajeroDP.ConsultaGeneralDP().FindAll(x => x.MtpCodigo.Contains(codigoABuscar) || x.ProCodigo.Contains(codigoABuscar));
+                // Inicializamos la lista como vacía por defecto
+                List<EstandarProduccionDP> resultado = new List<EstandarProduccionDP>();
+
+                if (string.IsNullOrWhiteSpace(textoBusqueda))
+                {
+                    resultado = mensajeroDP.ConsultarAllDP();
+                }
+                else
+                {
+                    string[] partes = textoBusqueda.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                    // Solo ejecutamos la consulta si hay exactamente 2 códigos
+                    if (partes.Length == 2)
+                    {
+                        // Agregamos el objeto único a la lista para evitar el error CS0029
+                        var item = mensajeroDP.ConsultarByCodDP(partes[0], partes[1]);
+                        if (item != null) resultado.Add(item);
+                    }
+                }
 
                 edpDatGri.ItemsSource = resultado;
 
-                if (resultado.Count == 0 && !string.IsNullOrEmpty(codigoABuscar))
+                if (resultado.Count == 0 && !string.IsNullOrWhiteSpace(textoBusqueda))
                 {
-                    MessageBox.Show(OracleDB.GetConfig("error.no_encontrado"),
-                    OracleDB.GetConfig("titulo.confirmacion"),
-                    MessageBoxButton.OK,
-                    MessageBoxImage.Information);
+                    MessageBox.Show(OracleDB.GetConfig("error.no_encontrado"));
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
+                MessageBox.Show("Error: " + ex.Message);
             }
         }
 

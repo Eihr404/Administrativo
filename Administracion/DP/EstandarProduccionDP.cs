@@ -17,7 +17,11 @@ namespace Administracion.DP
         // Instancia del modelo
         EstandarProduccionMD modelo = new EstandarProduccionMD();
 
-        public List<EstandarProduccionDP> ConsultaGeneralDP() => modelo.ConsultarAllMD();
+        public List<EstandarProduccionDP> ConsultarAllDP() => modelo.ConsultarAllMD();
+        public EstandarProduccionDP ConsultarByCodDP(string mtpCodigo, string proCodigo)
+        {
+            return modelo.ConsultarByCodMD(mtpCodigo, proCodigo);
+        }
         public int InsertarDP() => modelo.IngresarMD(this);
         public int ActualizarDP() => modelo.ActualizarMD(this);
         public int EliminarDP() => modelo.EliminarMD(this.MtpCodigo, this.ProCodigo);

@@ -11,7 +11,9 @@ namespace Administracion.MD
 {
     internal class CategoriaMD
     {
-        internal List<CategoriaDP> ConsultarTodosMD()
+        public CategoriaMD() { }
+        /* Consulta todas las categorias existentes en la base de datos */
+        internal List<CategoriaDP> ConsultarAllMD()
         {
             List<CategoriaDP> lista = new List<CategoriaDP>();
 

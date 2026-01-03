@@ -60,6 +60,7 @@ namespace Administracion.GUI
             prdComBUnidadM.SelectedValuePath = "UmeCodigo";
             prdComBUnidadM.SelectedIndex = -1;
         }
+        /* Constructor para modificar un producto existente */
         public ProductoForm(ProductoDP datosExistentes) : this()
         {
             esModificacion = true;
@@ -81,7 +82,7 @@ namespace Administracion.GUI
 
             productoDP = datosExistentes;
         }
-
+        /* Evento clic del botón Guardar */
         private void prdBtnGuardar_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -123,11 +124,12 @@ namespace Administracion.GUI
                 MessageBox.Show("Error: " + ex.Message);
             }
         }
+        /* Evento clic del botón Cancelar */
         private void prdBtnCancelar_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;
         }
-
+        /* Valida que no haya campos vacíos */
         private bool CamposInvalidos()
         {
             return string.IsNullOrWhiteSpace(prdTxtBCodigo.Text)

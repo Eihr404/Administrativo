@@ -101,7 +101,7 @@ namespace Administracion.GUI
                 MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
             }
         }
-
+        /* Evento para el botón Cancelar */
         private void btnCancelar_Click(object sender, RoutedEventArgs e)
         {
             this.DialogResult = false;

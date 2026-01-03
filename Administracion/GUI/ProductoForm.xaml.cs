@@ -26,45 +26,40 @@ namespace Administracion.GUI
         public ProductoForm()
         {
             InitializeComponent();
+            productoDP = new ProductoDP();
             CargarCombos();
             this.Title = "Nuevo Registro de Producto";
         }
         /* Carga los datos de los combobox para categoria, clasificación y unidad de medida */
         private void CargarCombos()
         {
-            prdComBCategoria.ItemsSource = productoDP.ObtenerCategoriasDP();
-            prdComBClasificacion.ItemsSource = productoDP.ObtenerClasificacionesDP();
-            prdComBUnidadM.ItemsSource = productoDP.ObtenerUnidadesMedidaDP();
-        }
-        private void Combo_MostrarDescripcion(object sender, SelectionChangedEventArgs e) 
-        { 
-            if (sender is ComboBox combo && combo.SelectedItem is string item) 
-            { 
-                string descripcion = item.Split('|')[1]; 
-                combo.Text = descripcion; 
-            } 
-        }
-        /* Actualiza visualmente la combobox en base al código seleccionado, mostrando la descripción */
-        private void SeleccionarItemPorCodigo(ComboBox combo, string codigo)
-        {
-            foreach (string item in combo.Items)
-            {
-                if (item.StartsWith(codigo + "|"))
-                {
-                    combo.SelectedItem = item;
-                    break;
-                }
-            }
-        }
-        /* Obtener el codigo de los combobox y no la descripción */
-        private string ObtenerCodigoDesdeCombo(ComboBox combo)
-        {
-            if (combo.SelectedItem is string item)
-                return item.Split('|')[0];
+            /* Categoría */
+            CategoriaDP categoriaDP = new CategoriaDP();
+            List<CategoriaDP> categorias = categoriaDP.ConsultarTodos();
 
-            return string.Empty;
-        }
+            prdComBCategoria.ItemsSource = categorias;
+            prdComBCategoria.DisplayMemberPath = "Descripcion";
+            prdComBCategoria.SelectedValuePath = "Codigo";
+            prdComBCategoria.SelectedIndex = -1;
 
+            /* Clasificación */
+            ClasificacionDP clasificacionDP = new ClasificacionDP();
+            List<ClasificacionDP> clasificaciones = clasificacionDP.ConsultarTodos();
+
+            prdComBClasificacion.ItemsSource = clasificaciones;
+            prdComBClasificacion.DisplayMemberPath = "Nombre";
+            prdComBClasificacion.SelectedValuePath = "Codigo";
+            prdComBClasificacion.SelectedIndex = -1;
+
+            /* Unidad de medida */
+            UnidadMedidaDP unidadDP = new UnidadMedidaDP();
+            List<UnidadMedidaDP> unidades = unidadDP.ConsultarTodos();
+
+            prdComBUnidadM.ItemsSource = unidades;
+            prdComBUnidadM.DisplayMemberPath = "UmeDescripcion";
+            prdComBUnidadM.SelectedValuePath = "UmeCodigo";
+            prdComBUnidadM.SelectedIndex = -1;
+        }
         public ProductoForm(ProductoDP datosExistentes) : this()
         {
             esModificacion = true;
@@ -73,9 +68,9 @@ namespace Administracion.GUI
             prdTxtBCodigo.Text = datosExistentes.Codigo;
             prdTxtBCodigo.IsEnabled = false;
 
-            SeleccionarItemPorCodigo(prdComBCategoria, datosExistentes.CategoriaCodigo);
-            SeleccionarItemPorCodigo(prdComBClasificacion, datosExistentes.ClasificacionCodigo);
-            SeleccionarItemPorCodigo(prdComBUnidadM, datosExistentes.UnidadMedidaCodigo);
+            prdComBCategoria.SelectedValue = datosExistentes.CategoriaCodigo;
+            prdComBClasificacion.SelectedValue = datosExistentes.ClasificacionCodigo;
+            prdComBUnidadM.SelectedValue = datosExistentes.UnidadMedidaCodigo;
 
             prdTxtBNombre.Text = datosExistentes.Nombre;
             prdTxtBDescripcion.Text = datosExistentes.Descripcion;
@@ -91,7 +86,6 @@ namespace Administracion.GUI
         {
             try
             {
-                // Validación: ningún campo vacío
                 if (CamposInvalidos())
                 {
                     MessageBox.Show("Todos los campos son obligatorios.");
@@ -101,19 +95,14 @@ namespace Administracion.GUI
                 double precioVenta = double.Parse(prdTxtBPrecioVent.Text);
                 double utilidad = double.Parse(prdTxtBUtilidad.Text);
 
-                // Precio anterior solo si es modificación
-                double precioAnterior = 0;
-                if (esModificacion && productoDP != null)
-                {
-                    precioAnterior = productoDP.PrecioVenta;
-                }
+                double precioAnterior = esModificacion ? productoDP.PrecioVenta : 0;
 
                 productoDP = new ProductoDP
                 {
                     Codigo = prdTxtBCodigo.Text.Trim(),
-                    CategoriaCodigo = ObtenerCodigoDesdeCombo(prdComBCategoria),
-                    ClasificacionCodigo = ObtenerCodigoDesdeCombo(prdComBClasificacion),
-                    UnidadMedidaCodigo = ObtenerCodigoDesdeCombo(prdComBUnidadM),
+                    CategoriaCodigo = prdComBCategoria.SelectedValue.ToString(),
+                    ClasificacionCodigo = prdComBClasificacion.SelectedValue.ToString(),
+                    UnidadMedidaCodigo = prdComBUnidadM.SelectedValue.ToString(),
                     Nombre = prdTxtBNombre.Text.Trim(),
                     Descripcion = prdTxtBDescripcion.Text.Trim(),
                     PrecioVentaAnt = precioAnterior,

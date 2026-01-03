@@ -11,9 +11,10 @@ namespace Administracion.DP
     {
         public string Codigo { get; set; }
         public string Nombre { get; set; }
+        /* Consulta todas las clasificaciones registradas */
         public List<ClasificacionDP> ConsultarTodos()
         {
-            return new ClasificacionMD().ConsultarTodosMD();
+            return new ClasificacionMD().ConsultarAllMD();
         }
     }
 }

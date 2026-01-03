@@ -126,7 +126,9 @@
              Margin="0,0,0,5"/>
             <UniformGrid>
                 <Button x:Name="prdBtnGuardar"
-                        Content="Guardar" Padding="3,3,3,3" Margin="0,0,10,0" Click="prdBtnGuardar_Click"/>
+                        Content="Guardar" Padding="3,3,3,3" 
+                        Margin="0,0,10,0" Click="prdBtnGuardar_Click"
+                        Background="#FFDEFADE"/>
                 <Button x:Name="prdBtnCancelar"
                         Content="Cancelar" Padding="3,3,3,3" Click="prdBtnCancelar_Click"/>
             </UniformGrid>

@@ -5,7 +5,7 @@
              Width="800">
 
 
-    <Grid Margin="10">
+    <Grid Margin="10" Grid.Row="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>

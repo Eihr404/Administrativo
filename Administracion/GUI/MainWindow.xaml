@@ -16,18 +16,17 @@
         </Grid.RowDefinitions>
 
         <!-- MENÚ -->
-        <Menu Grid.Row="1">
+        <Menu Grid.Row="0">
             <MenuItem Header="Gestión de proveedores"
                       Tag="Proveedores"
-                      Click="MenuItem_Click"/>
+                      Click="Navigation_Click"/>
             <MenuItem Header="Gestión de clientes"
                       Tag="Clientes"
-                      Click="MenuItem_Click"/>
+                      Click="Navigation_Click"/>
         </Menu>
 
         <!-- CONTENEDOR DE PESTAÑAS -->
-        <TabControl x:Name="MainTabControl"
-                    Grid.Row="2"
-                    Margin="5"/>
+        <ContentControl x:Name="MainContent"
+                        Grid.Row="2"/>
     </Grid>
 </Window>

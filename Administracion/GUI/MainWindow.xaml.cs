@@ -43,10 +43,6 @@ namespace Administracion.GUI
             }
         }
 
-
-
-
-
         private void BtnProbarConexion_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -66,46 +62,21 @@ namespace Administracion.GUI
         /* Función encargada de manejar el comportamiento por click, de los elementos 
         presentes en el menu de inicio */
 
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        private void Navigation_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is not MenuItem item || item.Tag == null)
+            if (sender is not FrameworkElement element || element.Tag == null)
                 return;
 
-            string tag = item.Tag.ToString();
-
-            // Verificar si la pestaña ya está abierta
-            foreach (TabItem tab in MainTabControl.Items)
-            {
-                if (tab.Tag?.ToString() == tag)
-                {
-                    MainTabControl.SelectedItem = tab;
-                    return;
-                }
-            }
-
-            // Crear nueva pestaña
-            TabItem nuevaTab = new TabItem
-            {
-                Header = tag,
-                Tag = tag
-            };
-
-            switch (tag)
+            switch (element.Tag.ToString())
             {
                 case "Proveedores":
-                    nuevaTab.Content = new Proveedor();
+                    MainContent.Content = new Proveedor();
                     break;
 
                 case "Clientes":
-                    nuevaTab.Content = new Cliente();
+                    MainContent.Content = new Cliente();
                     break;
-
-                default:
-                    return;
             }
-
-            MainTabControl.Items.Add(nuevaTab);
-            MainTabControl.SelectedItem = nuevaTab;
         }
     }
 }

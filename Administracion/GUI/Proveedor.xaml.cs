@@ -117,7 +117,7 @@ namespace Administracion.GUI
                     MessageBox.Show("Por favor, complete todos los campos.");
                     return;
                 }
-
+                
                 ProveedorDP proveedorDP = new ProveedorDP();
 
                 proveedorDP.InsertarProveedorDP(

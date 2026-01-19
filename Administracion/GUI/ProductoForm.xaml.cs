@@ -52,13 +52,7 @@ namespace Administracion.GUI
             prdComBClasificacion.SelectedIndex = -1;
 
             /* Unidad de medida */
-            UnidadMedidaDP unidadDP = new UnidadMedidaDP();
-            List<UnidadMedidaDP> unidades = unidadDP.ConsultarTodos();
 
-            prdComBUnidadM.ItemsSource = unidades;
-            prdComBUnidadM.DisplayMemberPath = "UmeDescripcion";
-            prdComBUnidadM.SelectedValuePath = "UmeCodigo";
-            prdComBUnidadM.SelectedIndex = -1;
         }
         /* Constructor para modificar un producto existente */
         public ProductoForm(ProductoDP datosExistentes) : this()
@@ -71,7 +65,6 @@ namespace Administracion.GUI
 
             prdComBCategoria.SelectedValue = datosExistentes.CategoriaCodigo;
             prdComBClasificacion.SelectedValue = datosExistentes.ClasificacionCodigo;
-            prdComBUnidadM.SelectedValue = datosExistentes.UnidadMedidaCodigo;
 
             prdTxtBNombre.Text = datosExistentes.Nombre;
             prdTxtBDescripcion.Text = datosExistentes.Descripcion;
@@ -103,7 +96,6 @@ namespace Administracion.GUI
                     Codigo = prdTxtBCodigo.Text.Trim(),
                     CategoriaCodigo = prdComBCategoria.SelectedValue.ToString(),
                     ClasificacionCodigo = prdComBClasificacion.SelectedValue.ToString(),
-                    UnidadMedidaCodigo = prdComBUnidadM.SelectedValue.ToString(),
                     Nombre = prdTxtBNombre.Text.Trim(),
                     Descripcion = prdTxtBDescripcion.Text.Trim(),
                     PrecioVentaAnt = precioAnterior,
@@ -135,7 +127,6 @@ namespace Administracion.GUI
             return string.IsNullOrWhiteSpace(prdTxtBCodigo.Text)
                 || string.IsNullOrWhiteSpace(prdComBCategoria.Text)
                 || string.IsNullOrWhiteSpace(prdComBClasificacion.Text)
-                || string.IsNullOrWhiteSpace(prdComBUnidadM.Text)
                 || string.IsNullOrWhiteSpace(prdTxtBNombre.Text)
                 || string.IsNullOrWhiteSpace(prdTxtBDescripcion.Text)
                 || string.IsNullOrWhiteSpace(prdTxtBPrecioVent.Text)

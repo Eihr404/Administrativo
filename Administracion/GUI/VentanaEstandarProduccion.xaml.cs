@@ -61,7 +61,6 @@ namespace Administracion.GUI
             esModificacion = true;
             cmbMateriaPrima.SelectedValue = seleccionadoDP.MtpCodigo;
             cmbProducto.SelectedValue = seleccionadoDP.ProCodigo;
-            txtEdpDescripcion.Text = seleccionadoDP.EdpDescripcion;
             txtEdpCantidad.Text = seleccionadoDP.EdpCantidad.ToString();
 
             // Usualmente las llaves primarias compuestas no se editan
@@ -79,7 +78,6 @@ namespace Administracion.GUI
                 {
                     MtpCodigo = cmbMateriaPrima.SelectedValue?.ToString(),
                     ProCodigo = cmbProducto.SelectedValue?.ToString(),
-                    EdpDescripcion = txtEdpDescripcion.Text,
                     EdpCantidad = double.Parse(txtEdpCantidad.Text)
                 };
 

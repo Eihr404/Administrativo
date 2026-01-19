@@ -85,6 +85,10 @@ namespace Administracion.GUI
                 case "EstandarProduccion":
                     MainContent.Content = new EstandarProduccion();
                     break;
+                case "Pedidos":
+                    MainContent.Content = new Pedido();
+                    break;
+
             }
         }
     }

@@ -8,8 +8,7 @@ namespace Administracion.DP
     public class EstandarProduccionDP
     {
         public string MtpCodigo { get; set; }
-        public string ProCodigo { get; set; }
-        public string EdpDescripcion { get; set; }
+        public string ProCodigo { get; set; }      
         public double EdpCantidad { get; set; }
 
         // Instancia del modelo

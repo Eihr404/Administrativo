@@ -1,4 +1,4 @@
-﻿using Administracion.Datos;
+﻿﻿using Administracion.Datos;
 using Administracion.DP;
 using Administracion.MD;
 using System;
@@ -40,7 +40,6 @@ namespace Administracion.GUI
                 // Cargamos los catálogos necesarios para el formulario
                 cmbCategoria.ItemsSource = new CategoriaDP().ConsultarTodos();
                 cmbClasificacion.ItemsSource = new ClasificacionDP().ConsultarTodos();
-                cmbUnidad.ItemsSource = new UnidadMedidaDP().ConsultarTodos();
             }
             catch (Exception ex)
             {
@@ -75,6 +74,7 @@ namespace Administracion.GUI
 
         private void prdBtnIngresar_Click(object sender, RoutedEventArgs e)
         {
+
             esModificacion = false;
             lblTituloForm.Text = OracleDB.GetConfig("titulo.formulario.nuevo");
             LimpiarCampos();
@@ -106,7 +106,6 @@ namespace Administracion.GUI
             // Asignación de Combos (SelectedValue usa el SelectedValuePath del XAML)
             cmbCategoria.SelectedValue = seleccionado.CategoriaCodigo;
             cmbClasificacion.SelectedValue = seleccionado.ClasificacionCodigo;
-            cmbUnidad.SelectedValue = seleccionado.UnidadMedidaCodigo;
 
             PanelFormularioPrd.Visibility = Visibility.Visible;
         }
@@ -139,12 +138,10 @@ namespace Administracion.GUI
                     Descripcion = txtPrdDesc.Text.Trim(),
                     PrecioVenta = precio,
                     Utilidad = utilidad,
+                    Imagen = txtPrdImagen.Text.Trim(),
                     AltTextImagen = txtPrdAltImagen.Text.Trim(),
                     CategoriaCodigo = cmbCategoria.SelectedValue.ToString(),
                     ClasificacionCodigo = cmbClasificacion.SelectedValue.ToString(),
-                    UnidadMedidaCodigo = cmbUnidad.SelectedValue.ToString(),
-                    // Atributos adicionales
-                    Imagen = "default.png", // Aquí podrías poner una ruta de imagen si tuvieras el control
                     PrecioVentaAnt = esModificacion ? productoDP.PrecioVenta : 0
                 };
 
@@ -187,10 +184,11 @@ namespace Administracion.GUI
             txtPrdDesc.Clear();
             txtPrdPrecio.Clear();
             txtPrdUtilidad.Clear();
+            txtPrdImagen.Clear();
             txtPrdAltImagen.Clear();
             cmbCategoria.SelectedIndex = -1;
             cmbClasificacion.SelectedIndex = -1;
-            cmbUnidad.SelectedIndex = -1;
+     
         }
 
         private bool CamposInvalidos()
@@ -198,8 +196,7 @@ namespace Administracion.GUI
             return string.IsNullOrWhiteSpace(txtPrdCodigo.Text) ||
                    string.IsNullOrWhiteSpace(txtPrdNombre.Text) ||
                    cmbCategoria.SelectedValue == null ||
-                   cmbClasificacion.SelectedValue == null ||
-                   cmbUnidad.SelectedValue == null;
+                   cmbClasificacion.SelectedValue == null;
         }
     }
 }

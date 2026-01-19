@@ -13,7 +13,17 @@ namespace Administracion.MD
         public List<MateriaPrimaDP> ConsultarAllMD()
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
-            string query = "SELECT * FROM MATERIA_PRIMA";
+            string query = @"
+                    SELECT 
+                        MTP_CODIGO,
+                        UME_CODIGO,
+                        BOD_CODIGO,
+                        MTP_NOMBRE,
+                        MTP_DESCRIPCION,
+                        MTP_PRECIO__COMPRA_ANT,
+                        MTP_PRECIO_COMPRA,
+                        MTP_EXISTENCIA
+                    FROM MATERIA_PRIMA";
 
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
@@ -28,11 +38,16 @@ namespace Administracion.MD
                         {
                             MtpCodigo = reader["MTP_CODIGO"].ToString(),
                             UmeCodigo = reader["UME_CODIGO"].ToString(),
-                            MtpNombre = reader["MTP_NOMBRE"].ToString(),
-                            MtpDescripcion = reader["MTP_DESCRIPCION"].ToString(),
-                            MtpPrecioCompraAnt = Convert.ToDouble(reader["MTP_PRECIO_COMPRA_ANT"]),
-                            MtpPrecioCompra = Convert.ToDouble(reader["MTP_PRECIO_COMPRA"])
-                        });
+                            BodCodigo = reader["BOD_CODIGO"].ToString(),
+
+                            MtpNombre = reader["MTP_NOMBRE"]?.ToString() ?? "",
+                            MtpDescripcion = reader["MTP_DESCRIPCION"]?.ToString() ?? "",
+
+                            MtpPrecioCompraAnt = reader.IsDBNull(reader.GetOrdinal("MTP_PRECIO__COMPRA_ANT")) ? 0 : Convert.ToDouble(reader["MTP_PRECIO__COMPRA_ANT"]),
+
+                            MtpPrecioCompra = reader.IsDBNull(reader.GetOrdinal("MTP_PRECIO_COMPRA")) ? 0: Convert.ToDouble(reader["MTP_PRECIO_COMPRA"]),
+
+                            MtpExistencia = reader.IsDBNull(reader.GetOrdinal("MTP_EXISTENCIA"))? 0 : Convert.ToInt32(reader["MTP_EXISTENCIA"])});
                     }
                 }
                 catch (Exception ex)
@@ -48,7 +63,7 @@ namespace Administracion.MD
         public List<MateriaPrimaDP> ConsultarByCodMD(string codigo)
         {
             List<MateriaPrimaDP> lista = new List<MateriaPrimaDP>();
-            string query = "SELECT * FROM MATERIA_PRIMA WHERE MTP_CODIGO = :cod";
+            string query = "SELECT * FROM MATERIA_PRIMA WHERE MTP_CODIGO = :codigo";
 
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
@@ -64,10 +79,16 @@ namespace Administracion.MD
                         {
                             MtpCodigo = reader["MTP_CODIGO"].ToString(),
                             UmeCodigo = reader["UME_CODIGO"].ToString(),
-                            MtpNombre = reader["MTP_NOMBRE"].ToString(),
-                            MtpDescripcion = reader["MTP_DESCRIPCION"].ToString(),
-                            MtpPrecioCompraAnt = Convert.ToDouble(reader["MTP_PRECIO_COMPRA_ANT"]),
-                            MtpPrecioCompra = Convert.ToDouble(reader["MTP_PRECIO_COMPRA"])
+                            BodCodigo = reader["BOD_CODIGO"].ToString(),
+
+                            MtpNombre = reader["MTP_NOMBRE"]?.ToString() ?? "",
+                            MtpDescripcion = reader["MTP_DESCRIPCION"]?.ToString() ?? "",
+
+                            MtpPrecioCompraAnt = reader.IsDBNull(reader.GetOrdinal("MTP_PRECIO__COMPRA_ANT")) ? 0 : Convert.ToDouble(reader["MTP_PRECIO__COMPRA_ANT"]),
+
+                            MtpPrecioCompra = reader.IsDBNull(reader.GetOrdinal("MTP_PRECIO_COMPRA")) ? 0 : Convert.ToDouble(reader["MTP_PRECIO_COMPRA"]),
+
+                            MtpExistencia = reader.IsDBNull(reader.GetOrdinal("MTP_EXISTENCIA")) ? 0 : Convert.ToInt32(reader["MTP_EXISTENCIA"])
                         });
                     }
                 }
@@ -83,61 +104,94 @@ namespace Administracion.MD
         /* Método para ingresar nueva materia prima */
         public int IngresarMD(MateriaPrimaDP dp)
         {
-            string sql = "INSERT INTO MATERIA_PRIMA (MTP_CODIGO, UME_CODIGO, MTP_NOMBRE, MTP_DESCRIPCION, MTP_PRECIO_COMPRA_ANT, MTP_PRECIO_COMPRA) " +
-                         "VALUES (:cod, :uni, :nom, :des, :pant, :pact)";
+            string sql = @"
+                    INSERT INTO MATERIA_PRIMA
+                    (
+                        MTP_CODIGO,
+                        UME_CODIGO,
+                        BOD_CODIGO,
+                        MTP_NOMBRE,
+                        MTP_DESCRIPCION,
+                        MTP_PRECIO__COMPRA_ANT,
+                        MTP_PRECIO_COMPRA,
+                        MTP_EXISTENCIA
+                    )
+                    VALUES
+                    (
+                        :cod,
+                        :ume,
+                        :bod,
+                        :nom,
+                        :des,
+                        :pant,
+                        :pact,
+                        :exi
+                    )";
 
-            using (OracleConnection conn = OracleDB.CrearConexion())
+            using OracleConnection conn = OracleDB.CrearConexion();
+            try
             {
-                try
-                {
-                    OracleCommand cmd = new OracleCommand(sql, conn);
-                    cmd.Parameters.Add(new OracleParameter("cod", dp.MtpCodigo));
-                    cmd.Parameters.Add(new OracleParameter("uni", dp.UmeCodigo));
-                    cmd.Parameters.Add(new OracleParameter("nom", dp.MtpNombre));
-                    cmd.Parameters.Add(new OracleParameter("des", dp.MtpDescripcion));
-                    cmd.Parameters.Add(new OracleParameter("pant", dp.MtpPrecioCompraAnt));
-                    cmd.Parameters.Add(new OracleParameter("pact", dp.MtpPrecioCompra));
+                using OracleCommand cmd = new OracleCommand(sql, conn);
 
-                    conn.Open();
-                    return cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    // error.general
-                    throw new Exception($"{OracleDB.GetConfig("error.general")} (IngresarMD): {ex.Message}");
-                }
+                cmd.Parameters.Add(":cod", dp.MtpCodigo);
+                cmd.Parameters.Add(":ume", dp.UmeCodigo);
+                cmd.Parameters.Add(":bod", dp.BodCodigo);
+                cmd.Parameters.Add(":nom", dp.MtpNombre);
+                cmd.Parameters.Add(":des", dp.MtpDescripcion);
+                cmd.Parameters.Add(":pant", dp.MtpPrecioCompraAnt);
+                cmd.Parameters.Add(":pact", dp.MtpPrecioCompra);
+                cmd.Parameters.Add(":exi", dp.MtpExistencia);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"{OracleDB.GetConfig("error.general")} (IngresarMD): {ex.Message}");
             }
         }
+
 
         /* Método para actualizar materia prima */
         public int ActualizarMD(MateriaPrimaDP dp)
         {
-            string sql = "UPDATE MATERIA_PRIMA SET UME_CODIGO = :uni, MTP_NOMBRE = :nom, " +
-                         "MTP_DESCRIPCION = :des, MTP_PRECIO_COMPRA_ANT = :pant, " +
-                         "MTP_PRECIO_COMPRA = :pact WHERE MTP_CODIGO = :cod";
+            string sql = @"
+                    UPDATE MATERIA_PRIMA
+                    SET
+                        UME_CODIGO = :ume,
+                        BOD_CODIGO = :bod,
+                        MTP_NOMBRE = :nom,
+                        MTP_DESCRIPCION = :des,
+                        MTP_PRECIO__COMPRA_ANT = :pant,
+                        MTP_PRECIO_COMPRA = :pact,
+                        MTP_EXISTENCIA = :exi
+                    WHERE MTP_CODIGO = :cod";
 
-            using (OracleConnection conn = OracleDB.CrearConexion())
+            using OracleConnection conn = OracleDB.CrearConexion();
+            try
             {
-                try
-                {
-                    OracleCommand cmd = new OracleCommand(sql, conn);
-                    cmd.Parameters.Add(new OracleParameter("uni", dp.UmeCodigo));
-                    cmd.Parameters.Add(new OracleParameter("nom", dp.MtpNombre));
-                    cmd.Parameters.Add(new OracleParameter("des", dp.MtpDescripcion));
-                    cmd.Parameters.Add(new OracleParameter("pant", dp.MtpPrecioCompraAnt));
-                    cmd.Parameters.Add(new OracleParameter("pact", dp.MtpPrecioCompra));
-                    cmd.Parameters.Add(new OracleParameter("cod", dp.MtpCodigo));
+                using OracleCommand cmd = new OracleCommand(sql, conn);
 
-                    conn.Open();
-                    return cmd.ExecuteNonQuery();
-                }
-                catch (Exception ex)
-                {
-                    // error.general
-                    throw new Exception($"{OracleDB.GetConfig("error.general")} (ActualizarMD): {ex.Message}");
-                }
+                cmd.Parameters.Add(":ume", dp.UmeCodigo);
+                cmd.Parameters.Add(":bod", dp.BodCodigo);
+                cmd.Parameters.Add(":nom", dp.MtpNombre);
+                cmd.Parameters.Add(":des", dp.MtpDescripcion);
+                cmd.Parameters.Add(":pant", dp.MtpPrecioCompraAnt);
+                cmd.Parameters.Add(":pact", dp.MtpPrecioCompra);
+                cmd.Parameters.Add(":exi", dp.MtpExistencia);
+                cmd.Parameters.Add(":cod", dp.MtpCodigo);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"{OracleDB.GetConfig("error.general")} (ActualizarMD): {ex.Message}");
             }
         }
+
 
         /* Método para eliminar materia prima */
         public int EliminarMD(string codigo)

@@ -78,11 +78,6 @@
                       Width="300"
                       Margin="0,0,0,5"/>
 
-            <Label Content="Unidad de medida del producto"/>
-            <ComboBox x:Name="prdComBUnidadM"
-                      Width="300"
-                      Margin="0,0,0,5"/>
-
             <Label Content="Nombre del producto"/>
             <TextBox x:Name="prdTxtBNombre"
              Style="{StaticResource TextBoxPlaceholder}"

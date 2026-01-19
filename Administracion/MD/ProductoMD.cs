@@ -16,15 +16,35 @@ namespace Administracion.MD
         {
             string sql = @"
                 INSERT INTO PRODUCTO
-                (PRO_Codigo, CAT_Codigo, CLA_Codigo, UME_Codigo,
-                 PRO_Nombre, PRO_Descripcion,
-                 PRO_Precio_venta, PRO_Precio_venta_ant,
-                 PRO_Utilidad, PRO_Imagen, PRO_Alt_Imagen)
+                (
+                    PRO_CODIGO,
+                    CAT_CODIGO,
+                    CLA_CODIGO,
+                    BOD_CODIGO,
+                    PRO_NOMBRE,
+                    PRO_DESCRIPCION,
+                    PRO_EXISTENCIA,
+                    PRO_PRECIO_VENTA,
+                    PRO_PRECIO_VENTA_ANT,
+                    PRO_UTILIDAD,
+                    PRO_IMAGEN,
+                    PRO_ALT_IMAGEN
+                )
                 VALUES
-                (:codigo, :catCodigo, :claCodigo, :umeCodigo,
-                 :nombre, :descripcion,
-                 :precio, :precioAnt,
-                 :utilidad, :imagen, :alt)";
+                (
+                    :codigo,
+                    :catCodigo,
+                    :claCodigo,
+                    :bodCodigo,
+                    :nombre,
+                    :descripcion,
+                    :existencia,
+                    :precio,
+                    :precioAnt,
+                    :utilidad,
+                    :imagen,
+                    :alt
+                )";
 
             try
             {
@@ -35,14 +55,16 @@ namespace Administracion.MD
                 cmd.Parameters.Add(":codigo", p.Codigo);
                 cmd.Parameters.Add(":catCodigo", p.CategoriaCodigo);
                 cmd.Parameters.Add(":claCodigo", p.ClasificacionCodigo);
-                cmd.Parameters.Add(":umeCodigo", p.UnidadMedidaCodigo);
+                cmd.Parameters.Add(":bodCodigo", p.BodegaCodigo);   // OBLIGATORIO
                 cmd.Parameters.Add(":nombre", p.Nombre);
                 cmd.Parameters.Add(":descripcion", p.Descripcion);
+                cmd.Parameters.Add(":existencia", p.Existencia);
                 cmd.Parameters.Add(":precio", p.PrecioVenta);
                 cmd.Parameters.Add(":precioAnt", p.PrecioVentaAnt);
                 cmd.Parameters.Add(":utilidad", p.Utilidad);
                 cmd.Parameters.Add(":imagen", p.Imagen);
                 cmd.Parameters.Add(":alt", p.AltTextImagen);
+
 
                 return cmd.ExecuteNonQuery() > 0;
             }
@@ -77,7 +99,6 @@ namespace Administracion.MD
                 using OracleCommand cmd = new OracleCommand(sql, conn);
                 cmd.Parameters.Add(":catCodigo", p.CategoriaCodigo);
                 cmd.Parameters.Add(":claCodigo", p.ClasificacionCodigo);
-                cmd.Parameters.Add(":umeCodigo", p.UnidadMedidaCodigo);
                 cmd.Parameters.Add(":nombre", p.Nombre);
                 cmd.Parameters.Add(":descripcion", p.Descripcion);
                 cmd.Parameters.Add(":precio", p.PrecioVenta);
@@ -122,13 +143,24 @@ namespace Administracion.MD
         {
             List<ProductoDP> producto = new List<ProductoDP>();
             string sql = @"
-                SELECT p.PRO_Codigo, c.CAT_Codigo, c.CAT_Descripcion, cl.CLA_Codigo, cl.CLA_Nombre, 
-                       u.UME_Codigo, u.UME_Descripcion, p.PRO_Nombre, p.PRO_Descripcion, 
-                       p.PRO_Precio_venta, p.PRO_Precio_venta_ant, p.PRO_Utilidad, p.PRO_Imagen, p.PRO_Alt_Imagen
+                SELECT 
+                    p.PRO_CODIGO,
+                    c.CAT_CODIGO,
+                    c.CAT_DESCRIPCION,
+                    cl.CLA_CODIGO,
+                    cl.CLA_NOMBRE,
+                    p.PRO_NOMBRE,
+                    p.PRO_DESCRIPCION,
+                    p.PRO_PRECIO_VENTA,
+                    p.PRO_PRECIO_VENTA_ANT,
+                    p.PRO_UTILIDAD,
+                    p.PRO_IMAGEN,
+                    p.PRO_ALT_IMAGEN
                 FROM PRODUCTO p
-                JOIN CATEGORIA c ON c.CAT_Codigo = p.CAT_Codigo
-                JOIN CLASIFICACION cl ON cl.CLA_Codigo = p.CLA_Codigo
-                JOIN UNIDAD_MEDIDA u ON u.UME_Codigo = p.UME_Codigo
+                JOIN CATEGORIA c 
+                    ON c.CAT_CODIGO = p.CAT_CODIGO
+                JOIN CLASIFICACION cl 
+                    ON cl.CLA_CODIGO = p.CLA_CODIGO
                 WHERE p.PRO_Codigo = :codigo";
 
             try
@@ -156,13 +188,25 @@ namespace Administracion.MD
         {
             List<ProductoDP> productos = new();
             string sql = @"
-                SELECT p.PRO_Codigo, c.CAT_Codigo, c.CAT_Descripcion, cl.CLA_Codigo, cl.CLA_Nombre, 
-                       u.UME_Codigo, u.UME_Descripcion, p.PRO_Nombre, p.PRO_Descripcion, 
-                       p.PRO_Precio_venta, p.PRO_Precio_venta_ant, p.PRO_Utilidad, p.PRO_Imagen, p.PRO_Alt_Imagen
+                SELECT 
+                    p.PRO_CODIGO,
+                    c.CAT_CODIGO,
+                    c.CAT_DESCRIPCION,
+                    cl.CLA_CODIGO,
+                    cl.CLA_NOMBRE,
+                    p.PRO_NOMBRE,
+                    p.PRO_DESCRIPCION,
+                    p.PRO_PRECIO_VENTA,
+                    p.PRO_PRECIO_VENTA_ANT,
+                    p.PRO_UTILIDAD,
+                    p.PRO_IMAGEN,
+                    p.PRO_ALT_IMAGEN
                 FROM PRODUCTO p
-                JOIN CATEGORIA c ON c.CAT_Codigo = p.CAT_Codigo
-                JOIN CLASIFICACION cl ON cl.CLA_Codigo = p.CLA_Codigo
-                JOIN UNIDAD_MEDIDA u ON u.UME_Codigo = p.UME_Codigo";
+                JOIN CATEGORIA c 
+                    ON c.CAT_CODIGO = p.CAT_CODIGO
+                JOIN CLASIFICACION cl 
+                    ON cl.CLA_CODIGO = p.CLA_CODIGO
+                ";
 
             try
             {
@@ -192,17 +236,19 @@ namespace Administracion.MD
                 CategoriaDescripcion = dr.GetString(2),
                 ClasificacionCodigo = dr.GetString(3),
                 ClasificacionDescripcion = dr.GetString(4),
-                UnidadMedidaCodigo = dr.GetString(5),
-                UnidadMedidaDescripcion = dr.GetString(6),
-                Nombre = dr.GetString(7),
-                Descripcion = dr.IsDBNull(8) ? "" : dr.GetString(8),
-                PrecioVenta = dr.GetDouble(9),
-                PrecioVentaAnt = dr.IsDBNull(10) ? 0 : dr.GetDouble(10),
-                Utilidad = dr.GetDouble(11),
-                Imagen = dr.IsDBNull(12) ? "" : dr.GetString(12),
-                AltTextImagen = dr.IsDBNull(13) ? "" : dr.GetString(13)
+
+                Nombre = dr.GetString(5),
+                Descripcion = dr.IsDBNull(6) ? "" : dr.GetString(6),
+
+                PrecioVenta = dr.GetDouble(7),
+                PrecioVentaAnt = dr.IsDBNull(8) ? 0 : dr.GetDouble(8),
+                Utilidad = dr.GetDouble(9),
+
+                Imagen = dr.IsDBNull(10) ? "" : dr.GetString(10),
+                AltTextImagen = dr.IsDBNull(11) ? "" : dr.GetString(11)
             };
         }
+
 
         /* Verifica si el producto existe */
         public bool VerificarMD(string codigo)

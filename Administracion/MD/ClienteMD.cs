@@ -14,17 +14,12 @@ namespace Administracion.MD
         public List<ClienteDP> ObtenerClientes()
         {
             var clientes = new List<ClienteDP>();
-
-            const string sql = @"
-                SELECT USR_NOMBRE, CLI_CEDULA, USR_ROL, USR_ESTADO
-                FROM USUARIO_APP
-                ORDER BY USR_NOMBRE ASC";
+            const string sql = "SELECT CLI_CEDULA, CLI_CORREO, CLI_TELEFONO FROM CLIENTE";
 
             try
             {
                 using var conn = OracleDB.CrearConexion();
                 conn.Open();
-
                 using var cmd = new OracleCommand(sql, conn);
                 using var dr = cmd.ExecuteReader();
 
@@ -32,18 +27,17 @@ namespace Administracion.MD
                 {
                     clientes.Add(new ClienteDP
                     {
-                        UsrNombre = dr.IsDBNull(0) ? "" : dr.GetString(0),
-                        CliCedula = dr.IsDBNull(1) ? "" : dr.GetString(1),
-                        Rol = dr.IsDBNull(2) ? "" : dr.GetString(2),
-                        EstadoCodigo = dr.IsDBNull(3) ? "" : dr.GetString(3)
+                        // ÍNDICES CORREGIDOS A 0, 1, 2
+                        CliCedula = dr.IsDBNull(0) ? "" : dr.GetString(0),
+                        CliCorreo = dr.IsDBNull(1) ? "" : dr.GetString(1),
+                        CliTelefono = dr.IsDBNull(2) ? "" : dr.GetString(2)
                     });
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al obtener clientes (USUARIO_APP).", ex);
+                throw new Exception("Error al obtener clientes.", ex);
             }
-
             return clientes;
         }
 
@@ -53,19 +47,17 @@ namespace Administracion.MD
         public List<ClienteDP> BuscarClientes(string textoBusqueda)
         {
             var clientes = new List<ClienteDP>();
-
+            // Asegúrate de que el SELECT tenga el orden que esperas
             const string sql = @"
-                SELECT USR_NOMBRE, CLI_CEDULA, USR_ROL, USR_ESTADO
-                FROM USUARIO_APP
-                WHERE UPPER(USR_NOMBRE) LIKE UPPER(:pTexto)
-                   OR UPPER(CLI_CEDULA) LIKE UPPER(:pTexto)
-                ORDER BY USR_NOMBRE ASC";
+                SELECT CLI_CEDULA, CLI_CORREO, CLI_TELEFONO
+                FROM CLIENTE
+                WHERE UPPER(CLI_CEDULA) LIKE UPPER(:pTexto)
+            ";
 
             try
             {
                 using var conn = OracleDB.CrearConexion();
                 conn.Open();
-
                 using var cmd = new OracleCommand(sql, conn);
                 cmd.Parameters.Add(new OracleParameter("pTexto", "%" + (textoBusqueda ?? "") + "%"));
 
@@ -74,87 +66,61 @@ namespace Administracion.MD
                 {
                     clientes.Add(new ClienteDP
                     {
-                        UsrNombre = dr.IsDBNull(0) ? "" : dr.GetString(0),
-                        CliCedula = dr.IsDBNull(1) ? "" : dr.GetString(1),
-                        Rol = dr.IsDBNull(2) ? "" : dr.GetString(2),
-                        EstadoCodigo = dr.IsDBNull(3) ? "" : dr.GetString(3)
+                        // Corregimos los índices: 0, 1, 2
+                        CliCedula = dr.IsDBNull(0) ? "" : dr.GetString(0),
+                        CliCorreo = dr.IsDBNull(1) ? "" : dr.GetString(1),
+                        CliTelefono = dr.IsDBNull(2) ? "" : dr.GetString(2)
                     });
                 }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al buscar clientes (USUARIO_APP).", ex);
+                throw new Exception("Error en MD: No se pudo recuperar la lista de clientes.", ex);
             }
-
             return clientes;
         }
 
-        /**
-         * Cambia el estado del usuario ('A'/'I').
-         */
-        public int CambiarEstado(string usrNombre, string nuevoEstadoCodigo)
+
+        public bool EliminarCliente(string codigo)
         {
-            const string sql = @"UPDATE USUARIO_APP SET USR_ESTADO = :pEstado WHERE USR_NOMBRE = :pUsr";
+            string sql = "DELETE FROM CLIENTE WHERE CLI_CEDULA = :codigo";
 
             try
             {
-                using var conn = OracleDB.CrearConexion();
+                using OracleConnection conn = OracleDB.CrearConexion();
                 conn.Open();
 
-                using var cmd = new OracleCommand(sql, conn);
-                cmd.Parameters.Add(new OracleParameter("pEstado", nuevoEstadoCodigo));
-                cmd.Parameters.Add(new OracleParameter("pUsr", usrNombre));
+                using OracleCommand cmd = new OracleCommand(sql, conn);
+                cmd.Parameters.Add(":codigo", codigo);
 
-                return cmd.ExecuteNonQuery();
+                int filas = cmd.ExecuteNonQuery();
+                return filas > 0;
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al cambiar estado del cliente.", ex);
-            }
-        }
-
-        /**
-         * Cambia el rol del usuario.
-         */
-        public int CambiarRol(string usrNombre, string nuevoRol)
-        {
-            const string sql = @"UPDATE USUARIO_APP SET USR_ROL = :pRol WHERE USR_NOMBRE = :pUsr";
-
-            try
-            {
-                using var conn = OracleDB.CrearConexion();
-                conn.Open();
-
-                using var cmd = new OracleCommand(sql, conn);
-                cmd.Parameters.Add(new OracleParameter("pRol", nuevoRol));
-                cmd.Parameters.Add(new OracleParameter("pUsr", usrNombre));
-
-                return cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al cambiar rol del cliente.", ex);
+                throw new Exception($"{OracleDB.GetConfig("error.general")} (EliminarMD): {ex.Message}");
             }
         }
 
         /**
          * Inserta un nuevo usuario.
          */
-        public int InsertarCliente(string usr, string cedula, string password, string rol)
+        public int InsertarCliente(string cedula, string correo, string telefono, string empresa)
         {
+            // Se agregó :empresa al final de VALUES
             const string sql = @"
-        INSERT INTO USUARIO_APP
-        (USR_NOMBRE, CLI_CEDULA, USR_CONTRASENA, USR_ROL, USR_ESTADO)
-        VALUES (:usr, :cedula, :pass, :rol, 'A')";
+        INSERT INTO CLIENTE (CLI_CEDULA, CLI_CORREO, CLI_TELEFONO, EMP_CEDULA_RUC)
+        VALUES (:cedula, :correo, :telef, :empresa)";
 
             using var conn = OracleDB.CrearConexion();
             conn.Open();
 
             using var cmd = new OracleCommand(sql, conn);
-            cmd.Parameters.Add(new OracleParameter("usr", usr));
+            // El orden de los parámetros debe coincidir con el SQL
             cmd.Parameters.Add(new OracleParameter("cedula", cedula));
-            cmd.Parameters.Add(new OracleParameter("pass", password));
-            cmd.Parameters.Add(new OracleParameter("rol", rol));
+            cmd.Parameters.Add(new OracleParameter("correo", correo));
+            cmd.Parameters.Add(new OracleParameter("telef", telefono));
+            cmd.Parameters.Add(new OracleParameter("empresa", empresa));
 
             return cmd.ExecuteNonQuery();
         }

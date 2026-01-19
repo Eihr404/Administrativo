@@ -17,8 +17,11 @@
 
         <!-- MENÚ -->
         <Menu Grid.Row="0">
-            <MenuItem Header="Gestión de proveedores"
-                      Tag="Proveedores"
+            <MenuItem Header="Gestión de pedidos"
+                      Tag="Pedidos"
+                      Click="Navigation_Click"/>
+            <MenuItem Header="Gestión de Nota de venta"
+                      Tag="NotaVenta"
                       Click="Navigation_Click"/>
             <MenuItem Header="Gestión de productos"
                       Tag="Productos"

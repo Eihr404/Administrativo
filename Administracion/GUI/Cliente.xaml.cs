@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Administracion.Datos;
+using Administracion.DP;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +13,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using Administracion.DP;
 
 namespace Administracion.GUI
 {
@@ -65,8 +66,13 @@ namespace Administracion.GUI
             }
         }
 
-        private void BtnToggleEstado_Click(object sender, RoutedEventArgs e)
+        private void BtnToggleEliminar(object sender, RoutedEventArgs e)
         {
+            if (GridClientes.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Seleccione al menos un cliente.");
+                return;
+            }
             ClienteDP? cli = ClienteSeleccionado();
             if (cli == null)
             {
@@ -76,9 +82,7 @@ namespace Administracion.GUI
 
             try
             {
-                string nuevoEstado = cli.EstadoCodigo == "A" ? "I" : "A";
-                clienteService.CambiarEstado(cli.UsrNombre, nuevoEstado);
-                CargarClientes();
+                clienteService.EliminarCliente(cli.CliCedula);
             }
             catch (Exception ex)
             {
@@ -86,31 +90,7 @@ namespace Administracion.GUI
             }
         }
 
-        private void BtnModificarRol_Click(object sender, RoutedEventArgs e)
-        {
-            ClienteDP? cli = ClienteSeleccionado();
-            if (cli == null)
-            {
-                MessageBox.Show("Seleccione un cliente.");
-                return;
-            }
-
-            // Alterna usuario entre ADMIN y CLIENTE
-            string nuevoRol = string.Equals(cli.Rol, "ADMIN", StringComparison.OrdinalIgnoreCase)
-                ? "CLIENTE"
-                : "ADMIN";
-
-            try
-            {
-                clienteService.CambiarRol(cli.UsrNombre, nuevoRol);
-                CargarClientes();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error al cambiar rol:\n" + ex.Message);
-            }
-        }
-
+  
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             // nada
@@ -130,23 +110,24 @@ namespace Administracion.GUI
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(TxtUsrNombre.Text) ||
+                if (string.IsNullOrWhiteSpace(TxtCorreo.Text) ||
                     string.IsNullOrWhiteSpace(TxtCedula.Text) ||
-                    CmbRol.SelectedItem == null)
+                    string.IsNullOrWhiteSpace(TxtTelefono.Text))
                 {
                     MessageBox.Show("Complete todos los campos.");
                     return;
                 }
 
+                // CORRECCIÓN: El orden debe ser Cedula, Correo, Telefono según tu ClienteDPService
                 clienteService.InsertarCliente(
-                    TxtUsrNombre.Text.Trim(),
                     TxtCedula.Text.Trim(),
-                    TxtPassword.Password.Trim(),
-                    ((ComboBoxItem)CmbRol.SelectedItem).Content.ToString()
+                    TxtCorreo.Text.Trim(),
+                    TxtTelefono.Text.Trim()
                 );
 
                 PanelNuevoCliente.Visibility = Visibility.Collapsed;
-                CargarClientes();
+                CargarClientes(); // Recarga el grid
+                MessageBox.Show("Cliente guardado con éxito.");
             }
             catch (Exception ex)
             {
@@ -154,13 +135,43 @@ namespace Administracion.GUI
             }
         }
         private void LimpiarFormulario()
-        {
-            TxtUsrNombre.Text = "";
+        {          
             TxtCedula.Text = "";
-            TxtPassword.Password = "";
-            CmbRol.SelectedIndex = -1;
+            TxtCorreo.Text = "";
+            TxtTelefono.Text = "";
         }
 
+        private void BtnEliminar(object sender, RoutedEventArgs e)
+        {
+
+            if (GridClientes.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Seleccione al menos un cliente.");
+                return;
+            }
+            ClienteDP? cli = ClienteSeleccionado();
+            if (cli == null)
+            {
+                MessageBox.Show("Seleccione un cliente.");
+                return;
+            }
+
+            if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"),
+                OracleDB.GetConfig("titulo.confirmacion"), MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                try
+                {
+                    clienteService.EliminarCliente(cli.CliCedula);
+                    MessageBox.Show(OracleDB.GetConfig("exito.eliminar"));
+                    CargarClientes();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error al cambiar estado:\n" + ex.Message);
+                }
+            }
+            
+        }
     }
 }
 

@@ -22,8 +22,7 @@
             
             <Button Content="Consultar" Width="90" Click="BtnConsultar_Click" Margin="0,0,10,0"/>
             <Button Content="Ingresar" Width="90" Click="CliBtnIngresar" Margin="0,0,10,0"/>
-            <Button Content="Eliminar" Width="90" Click="BtnToggleEstado_Click" Margin="0,0,10,0"/>
-            <Button Content="Modificar rol" Width="90" Click="BtnModificarRol_Click" Margin="0,0,10,0"/>
+            <Button Content="Eliminar" Width="90" Click="BtnEliminar" Margin="0,0,10,0"/>
         </StackPanel>
 
             <!-- Tabla -->
@@ -32,11 +31,10 @@
                AutoGenerateColumns="False"
                IsReadOnly="True"
                SelectionMode="Single">
-                <DataGrid.Columns>
-                    <DataGridTextColumn Header="Usuario" Binding="{Binding UsrNombre}" Width="200"/>
+                <DataGrid.Columns>           
                     <DataGridTextColumn Header="Cédula" Binding="{Binding CliCedula}" Width="140"/>
-                    <DataGridTextColumn Header="Rol" Binding="{Binding Rol}" Width="160"/>
-                    <DataGridTextColumn Header="Estado" Binding="{Binding Estado}" Width="100"/>
+                    <DataGridTextColumn Header="Correo" Binding="{Binding CliCorreo}" Width="160"/>
+                    <DataGridTextColumn Header="Telefono" Binding="{Binding CliTelefono}" Width="100"/>
                 </DataGrid.Columns>
             </DataGrid>
 
@@ -61,23 +59,16 @@
                    Margin="0,0,0,15"/>
 
                 <!-- USUARIO -->
-                <Label Content="Usuario:"/>
-                <TextBox x:Name="TxtUsrNombre" Margin="0,0,0,10"/>
+                <Label Content="Correo:"/>
+                <TextBox x:Name="TxtCorreo" Margin="0,0,0,10"/>
 
                 <!-- CÉDULA -->
                 <Label Content="Cédula:"/>
                 <TextBox x:Name="TxtCedula" Margin="0,0,0,10"/>
 
                 <!-- CONTRASEÑA -->
-                <Label Content="Contraseña:"/>
-                <PasswordBox x:Name="TxtPassword" Margin="0,0,0,10"/>
-
-                <!-- ROL -->
-                <Label Content="Rol:"/>
-                <ComboBox x:Name="CmbRol" Margin="0,0,0,15">
-                    <ComboBoxItem Content="CLIENTE"/>
-                    <ComboBoxItem Content="ADMIN"/>
-                </ComboBox>
+                <Label Content="Telefono:"/>
+                <TextBox x:Name="TxtTelefono" Margin="0,0,0,10"/>
 
                 <!-- BOTONES -->
                 <UniformGrid Columns="2">

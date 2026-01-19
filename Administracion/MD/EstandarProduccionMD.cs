@@ -11,7 +11,7 @@ namespace Administracion.MD
         public List<EstandarProduccionDP> ConsultarAllMD()
         {
             List<EstandarProduccionDP> lista = new List<EstandarProduccionDP>();
-            string query = "SELECT * FROM ESTANDAR_PRODUCCION";
+            string query = @"SELECT * FROM ESTANDAR_PRODUCCION";
 
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
@@ -26,7 +26,6 @@ namespace Administracion.MD
                         {
                             MtpCodigo = reader["MTP_CODIGO"].ToString(),
                             ProCodigo = reader["PRO_CODIGO"].ToString(),
-                            EdpDescripcion = reader["EDP_DESCRIPCION"].ToString(),
                             EdpCantidad = Convert.ToDouble(reader["EDP_CANTIDAD"])
                         });
                     }
@@ -42,7 +41,7 @@ namespace Administracion.MD
         public List<EstandarProduccionDP> ConsultarByCodMD(string criterio)
         {
             List<EstandarProduccionDP> lista = new List<EstandarProduccionDP>();
-            string sql = "SELECT MTP_Codigo, PRO_Codigo, EDP_Descripcion, EDP_Cantidad " +
+            string sql = "SELECT MTP_Codigo, PRO_Codigo, EDP_Cantidad " +
                          "FROM ESTANDAR_PRODUCCION " +
                          "WHERE MTP_Codigo LIKE :criterio " +
                          "OR PRO_Codigo LIKE :criterio";
@@ -65,7 +64,6 @@ namespace Administracion.MD
                                 {
                                     MtpCodigo = dr.GetString(0),
                                     ProCodigo = dr.GetString(1),
-                                    EdpDescripcion = dr.IsDBNull(2) ? "" : dr.GetString(2),
                                     EdpCantidad = dr.GetDouble(3)
                                 });
                             }
@@ -82,7 +80,7 @@ namespace Administracion.MD
 
         public int IngresarMD(EstandarProduccionDP dp)
         {
-            string sql = "INSERT INTO ESTANDAR_PRODUCCION (MTP_CODIGO, PRO_CODIGO, EDP_DESCRIPCION, EDP_CANTIDAD) VALUES (:mtp, :pro, :des, :can)";
+            string sql = "INSERT INTO ESTANDAR_PRODUCCION (MTP_CODIGO, PRO_CODIGO, EDP_CANTIDAD) VALUES (:mtp, :pro, :can)";
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
                 try
@@ -90,7 +88,6 @@ namespace Administracion.MD
                     OracleCommand cmd = new OracleCommand(sql, conn);
                     cmd.Parameters.Add(new OracleParameter("mtp", dp.MtpCodigo));
                     cmd.Parameters.Add(new OracleParameter("pro", dp.ProCodigo));
-                    cmd.Parameters.Add(new OracleParameter("des", dp.EdpDescripcion));
                     cmd.Parameters.Add(new OracleParameter("can", dp.EdpCantidad));
                     conn.Open();
                     return cmd.ExecuteNonQuery();
@@ -104,13 +101,12 @@ namespace Administracion.MD
 
         public int ActualizarMD(EstandarProduccionDP dp)
         {
-            string sql = "UPDATE ESTANDAR_PRODUCCION SET EDP_DESCRIPCION = :des, EDP_CANTIDAD = :can WHERE MTP_CODIGO = :mtp AND PRO_CODIGO = :pro";
+            string sql = "UPDATE ESTANDAR_PRODUCCION SET EDP_CANTIDAD = :can WHERE MTP_CODIGO = :mtp AND PRO_CODIGO = :pro";
             using (OracleConnection conn = OracleDB.CrearConexion())
             {
                 try
                 {
                     OracleCommand cmd = new OracleCommand(sql, conn);
-                    cmd.Parameters.Add(new OracleParameter("des", dp.EdpDescripcion));
                     cmd.Parameters.Add(new OracleParameter("can", dp.EdpCantidad));
                     cmd.Parameters.Add(new OracleParameter("mtp", dp.MtpCodigo));
                     cmd.Parameters.Add(new OracleParameter("pro", dp.ProCodigo));

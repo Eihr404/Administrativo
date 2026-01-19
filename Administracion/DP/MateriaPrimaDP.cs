@@ -9,12 +9,16 @@ namespace Administracion.DP
 {
     public class MateriaPrimaDP
     {
-        public string MtpCodigo { get; set; }
-        public string UmeCodigo { get; set; }
-        public string MtpNombre { get; set; }
-        public string MtpDescripcion { get; set; }
+        public string MtpCodigo { get; set; } = string.Empty;
+        public string UmeCodigo { get; set; } = string.Empty;
+        public string BodCodigo { get; set; } = "0000001";
+
+        public string MtpNombre { get; set; } = string.Empty;
+        public string MtpDescripcion { get; set; } = string.Empty;
+
         public double MtpPrecioCompraAnt { get; set; }
         public double MtpPrecioCompra { get; set; }
+        public int MtpExistencia { get; set; }
 
         /* Instancia del MD para comunicación con DB */
         private MateriaPrimaMD modelo = new MateriaPrimaMD();

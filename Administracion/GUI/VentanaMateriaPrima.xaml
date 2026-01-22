@@ -57,6 +57,7 @@
                         <RowDefinition/>
                         <RowDefinition/>
                         <RowDefinition/>
+                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="5">
@@ -79,6 +80,13 @@
                     <StackPanel Grid.Row="2" Grid.Column="0" Margin="5">
                         <Label Content="Precio Compra:"/>
                         <TextBox x:Name="TxtMtpPrecio"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="5">
+                        <Label Content="Bodega:"/>
+                        <ComboBox x:Name="CmbBodega" 
+                  DisplayMemberPath="Nombre" 
+                  SelectedValuePath="Codigo"/>
                     </StackPanel>
                 </Grid>
 

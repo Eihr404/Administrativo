@@ -149,15 +149,39 @@ namespace Administracion.GUI
 
         private void pddBtnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            PedidoDP seleccionado = pddDatGri.SelectedItem as PedidoDP;
-            if (seleccionado == null) return;
+            // 1. Obtener el elemento seleccionado
+            PedidoDP sel = pddDatGri.SelectedItem as PedidoDP;
 
-            if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"), "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            // 2. Validar que no sea nulo antes de proceder
+            if (sel == null)
             {
-                if (seleccionado.EliminarDP() > 0)
+                MessageBox.Show("Por favor, seleccione una nota de venta de la lista.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // 3. Confirmación del usuario
+            if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"), "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
                 {
-                    MessageBox.Show(OracleDB.GetConfig("exito.eliminar"));
-                    CargarDatosIniciales();
+                    // 4. Intento de eliminación en la base de datos
+                    if (sel.EliminarDP() > 0)
+                    {
+                        // Mensaje de éxito desde el archivo de configuración
+                        MessageBox.Show(OracleDB.GetConfig("exito.eliminar"), "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        // Actualizar la tabla
+                        CargarDatosIniciales();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 5. Captura el error (evita que el programa se cierre) y muestra el motivo real
+                    // Por ejemplo: "No se puede eliminar porque tiene detalles asociados"
+                    MessageBox.Show($"No se pudo eliminar el registro.\n\nDetalle: {ex.Message}",
+                                    "Error de Base de Datos",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
                 }
             }
         }

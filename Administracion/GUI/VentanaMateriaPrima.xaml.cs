@@ -18,7 +18,8 @@ namespace Administracion.GUI
         {
             InitializeComponent();
             CargarDatosIniciales();
-            CargarUnidades(); // Carga el ComboBox del formulario una sola vez
+            CargarUnidades();
+            CargarBodegas();
         }
 
         #region Lógica de Carga y Consulta
@@ -43,6 +44,20 @@ namespace Administracion.GUI
                 CmbUmeCodigo.ItemsSource = unidad.ConsultarTodos();
                 CmbUmeCodigo.SelectedValuePath = "UmeCodigo"; 
                 CmbUmeCodigo.DisplayMemberPath = "UmeDescripcion";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
+            }
+        }
+        private void CargarBodegas()
+        {
+            try
+            {
+                BodegaDP bodega = new BodegaDP();
+                CmbBodega.ItemsSource = bodega.ConsultarTodos();
+                CmbBodega.SelectedValuePath = "Codigo";
+                CmbBodega.DisplayMemberPath = "Nombre";
             }
             catch (Exception ex)
             {
@@ -95,6 +110,7 @@ namespace Administracion.GUI
             TxtMtpDesc.Text = seleccionado.MtpDescripcion;
             TxtMtpPrecio.Text = seleccionado.MtpPrecioCompra.ToString();
             CmbUmeCodigo.SelectedValue = seleccionado.UmeCodigo;
+            CmbBodega.SelectedValue = seleccionado.BodCodigo;
 
             PanelFormularioMtp.Visibility = Visibility.Visible;
         }
@@ -112,6 +128,7 @@ namespace Administracion.GUI
             TxtMtpDesc.Text = string.Empty;
             TxtMtpPrecio.Text = string.Empty;
             CmbUmeCodigo.SelectedIndex = -1;
+            CmbBodega.SelectedIndex = -1;
             Resultado = null;
         }
         #endregion
@@ -137,6 +154,7 @@ namespace Administracion.GUI
                 {
                     MtpCodigo = TxtMtpCodigo.Text.Trim(),
                     UmeCodigo = CmbUmeCodigo.SelectedValue.ToString(),
+                    BodCodigo = CmbBodega.SelectedValue.ToString(),
                     MtpNombre = TxtMtpNombre.Text.Trim(),
                     MtpDescripcion = TxtMtpDesc.Text.Trim(),
                     MtpPrecioCompraAnt = precioAnterior,
@@ -162,15 +180,39 @@ namespace Administracion.GUI
 
         private void mtpBtnEliminar_Click(object sender, RoutedEventArgs e)
         {
-            MateriaPrimaDP seleccionado = mtpDatGri.SelectedItem as MateriaPrimaDP;
-            if (seleccionado == null) return;
+            // 1. Obtener el elemento seleccionado
+            MateriaPrimaDP sel = mtpDatGri.SelectedItem as MateriaPrimaDP;
 
-            if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"), "Confirmar", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            // 2. Validar que no sea nulo antes de proceder
+            if (sel == null)
             {
-                if (seleccionado.EliminarDP() > 0)
+                MessageBox.Show("Por favor, seleccione una nota de venta de la lista.", "Aviso", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            // 3. Confirmación del usuario
+            if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.borrar"), "Confirmar", MessageBoxButton.YesNo, MessageBoxImage.Question) == MessageBoxResult.Yes)
+            {
+                try
                 {
-                    MessageBox.Show(OracleDB.GetConfig("exito.eliminar"));
-                    CargarDatosIniciales();
+                    // 4. Intento de eliminación en la base de datos
+                    if (sel.EliminarDP() > 0)
+                    {
+                        // Mensaje de éxito desde el archivo de configuración
+                        MessageBox.Show(OracleDB.GetConfig("exito.eliminar"), "Éxito", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                        // Actualizar la tabla
+                        CargarDatosIniciales();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // 5. Captura el error (evita que el programa se cierre) y muestra el motivo real
+                    // Por ejemplo: "No se puede eliminar porque tiene detalles asociados"
+                    MessageBox.Show($"No se pudo eliminar el registro.\n\nDetalle: {ex.Message}",
+                                    "Error de Base de Datos",
+                                    MessageBoxButton.OK,
+                                    MessageBoxImage.Error);
                 }
             }
         }

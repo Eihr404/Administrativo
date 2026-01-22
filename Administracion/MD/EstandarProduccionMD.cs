@@ -64,7 +64,7 @@ namespace Administracion.MD
                                 {
                                     MtpCodigo = dr.GetString(0),
                                     ProCodigo = dr.GetString(1),
-                                    EdpCantidad = dr.GetDouble(3)
+                                    EdpCantidad = dr.GetDouble(2)
                                 });
                             }
                         }

@@ -32,11 +32,19 @@ namespace Administracion.GUI
         {
             try
             {
-                // Cargamos Notas de Venta y Productos para los ComboBox
+
                 cmbNotaVenta.ItemsSource = new NotaVentaDP().ConsultarAllDP();
-                cmbProductoDnv.ItemsSource = new ProductoDP().ConsultarAllDP(); // Asumiendo que existe ProductoDP
+                cmbNotaVenta.SelectedValuePath = "NdvNumero"; // La propiedad que es la PK en NotaVentaDP
+                cmbNotaVenta.DisplayMemberPath = "NdvNumero"; // Lo que el usuario ve
+
+                cmbProductoDnv.ItemsSource = new ProductoDP().ConsultarAllDP();
+                cmbProductoDnv.SelectedValuePath = "Codigo";    // Valor que se enviará a la DB
+                cmbProductoDnv.DisplayMemberPath = "ProNombre"; // Texto que verá el usuario
             }
-            catch (Exception ex) { MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}"); }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}");
+            }
         }
 
         private void dnvBtnIngresar_Click(object sender, RoutedEventArgs e)

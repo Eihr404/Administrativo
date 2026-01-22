@@ -12,11 +12,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="cliTxtBuscar" Width="250" VerticalContentAlignment="Center" ToolTip="Buscar por usuario o cédula"/>
-            <Button x:Name="cliBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="BtnConsultar_Click"/>
-            <Button x:Name="cliBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="CliBtnIngresar_Click"/>
-            <Button x:Name="cliBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="BtnEliminar_Click"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Ingrese el código del registro a buscar:" 
+           Margin="0,0,0,5" 
+           FontWeight="SemiBold" 
+           Foreground="#555"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="cliTxtBuscar" 
+             Width="250" 
+             VerticalContentAlignment="Center" 
+             ToolTip="Buscar por cedula del cliente"/>
+                <Button x:Name="cliBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="BtnConsultar_Click"/>
+                <Button x:Name="cliBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="CliBtnIngresar_Click"/>
+                <Button x:Name="cliBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="BtnEliminar_Click"/>
+            </StackPanel>
         </StackPanel>
 
         <DataGrid x:Name="GridClientes" 

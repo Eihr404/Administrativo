@@ -16,6 +16,7 @@ namespace Administracion.GUI
         {
             InitializeComponent();
             CargarDatosIniciales();
+            CargarListasComboBox();
         }
 
         private void CargarDatosIniciales()
@@ -26,6 +27,29 @@ namespace Administracion.GUI
                 ndvDatGri.ItemsSource = mensajero.ConsultarAllDP();
             }
             catch (Exception ex) { MessageBox.Show($"{OracleDB.GetConfig("error.general")} {ex.Message}"); }
+        }
+
+        private void CargarListasComboBox()
+        {
+            try
+            {
+                // Cargar Sucursales
+                // Asumiendo que tienes una clase SucursalDP o similar
+                SucursalDP sucursalMensajero = new SucursalDP();
+                CboSucursal.ItemsSource = sucursalMensajero.ConsultarAllDP();
+                CboSucursal.DisplayMemberPath = "SucNombre"; 
+                CboSucursal.SelectedValuePath = "SucCodigo";
+
+                // Cargar Pedidos
+                PedidoDP pedidoMensajero = new PedidoDP();
+                CboPedido.ItemsSource = pedidoMensajero.ConsultarAllDP();
+                CboPedido.DisplayMemberPath = "PddCodigo";
+                CboPedido.SelectedValuePath = "PddCodigo";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al cargar listas desplegables: " + ex.Message);
+            }
         }
 
         private void ndvBtnConsultar_Click(object sender, RoutedEventArgs e)
@@ -60,8 +84,8 @@ namespace Administracion.GUI
 
             TxtNdvNumero.Text = seleccionado.NdvNumero;
             TxtNdvNumero.IsEnabled = false;
-            TxtSucCodigo.Text = seleccionado.SucCodigo;
-            TxtPddCodigoNota.Text = seleccionado.PddCodigo;
+            CboSucursal.SelectedValue = seleccionado.SucCodigo;
+            CboPedido.SelectedValue = seleccionado.PddCodigo;
             DtNdvFecha.SelectedDate = seleccionado.NdvFechaEmision;
             TxtNdvMontoTotal.Text = seleccionado.NdvMontoTotal.ToString();
             TxtNdvResponsable.Text = seleccionado.NdvResponsable;
@@ -74,7 +98,9 @@ namespace Administracion.GUI
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(TxtNdvNumero.Text) || string.IsNullOrWhiteSpace(TxtPddCodigoNota.Text))
+                if (string.IsNullOrWhiteSpace(TxtNdvNumero.Text) ||
+                    CboSucursal.SelectedValue == null ||
+                    CboPedido.SelectedValue == null)
                 {
                     MessageBox.Show(OracleDB.GetConfig("error.validacion")); return;
                 }
@@ -82,8 +108,8 @@ namespace Administracion.GUI
                 NotaVentaDP nota = new NotaVentaDP
                 {
                     NdvNumero = TxtNdvNumero.Text.Trim(),
-                    SucCodigo = TxtSucCodigo.Text.Trim(),
-                    PddCodigo = TxtPddCodigoNota.Text.Trim(),
+                    SucCodigo = CboSucursal.SelectedValue.ToString(),
+                    PddCodigo = CboPedido.SelectedValue.ToString(),
                     NdvFechaEmision = DtNdvFecha.SelectedDate ?? DateTime.Now,
                     NdvMontoTotal = double.TryParse(TxtNdvMontoTotal.Text, out double m) ? m : 0,
                     NdvResponsable = TxtNdvResponsable.Text.Trim(),
@@ -109,7 +135,9 @@ namespace Administracion.GUI
 
         private void LimpiarFormulario()
         {
-            TxtNdvNumero.Text = TxtSucCodigo.Text = TxtPddCodigoNota.Text = TxtNdvMontoTotal.Text = TxtNdvResponsable.Text = TxtNdvDescripcion.Text = string.Empty;
+            TxtNdvNumero.Text = TxtNdvMontoTotal.Text = TxtNdvResponsable.Text = TxtNdvDescripcion.Text = string.Empty;
+            CboSucursal.SelectedIndex = -1;
+            CboPedido.SelectedIndex = -1;
             DtNdvFecha.SelectedDate = null;
             Resultado = null;
         }

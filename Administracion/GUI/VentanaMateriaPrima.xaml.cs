@@ -8,13 +8,13 @@ using System.Windows.Controls;
 
 namespace Administracion.GUI
 {
-    public partial class MateriaPrima : UserControl
+    public partial class VentanaMateriaPrima : UserControl
     {
         // Variables de estado para el formulario integrado
         private MateriaPrimaDP Resultado { get; set; }
         private bool esModificacion = false;
 
-        public MateriaPrima()
+        public VentanaMateriaPrima()
         {
             InitializeComponent();
             CargarDatosIniciales();

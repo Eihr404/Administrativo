@@ -7,53 +7,51 @@ using System.Threading.Tasks;
 
 namespace Administracion.DP
 {
-    internal class PedidoDP
+    public class PedidoDP
     {
-        private PedidoMD pedidoMD = new PedidoMD();
-        public string PedCodigo { get; set; }      // PED_CODIGO
-        public string CliCedula { get; set; }      // CLI_CODIGO
-        public string PedComentario { get; set; }   // PED_COMENTARIO
-        public string PedEstado { get; set; }     // PED_ESTADO
-        public string PedUbicacion { get; set; }  // PED_UBICACION
-        public double PedTotal { get; set; }     // PED_TOTAL
-        public double PedAbono { get; set; }     // PED_ABONO
+        // Atributos de Pedido según la estructura de base de datos
+        public string PddCodigo { get; set; } = string.Empty;       // PDD_CODIGO
+        public string CliCedula { get; set; } = string.Empty;       // CLI_CEDULA
+        public string PddComentario { get; set; } = string.Empty;   // PDD_COMENTARIO
+        public string PddEstado { get; set; } = string.Empty;       // PDD_ESTADO
+        public string PddUbicacion { get; set; } = string.Empty;    // PDD_UBICACION
 
-        public bool IngresarDP()
-        {
-            return pedidoMD.IngresarMD(this);
-        }
+        public double PddMontoTotal { get; set; }                   // PDD_MONTO_TOTAL
+        public double PddAbono { get; set; }                        // PDD_ABONO
 
-        /* Modifica un producto en la base de datos */
-        public bool ModificarDP()
-        {
-            return pedidoMD.ModificarMD(this);
-        }
+        /* Instancia del MD para comunicación con DB */
+        private PedidoMD modelo = new PedidoMD();
 
-        /* Elimina un producto de la base de datos */
-        public bool EliminarDP()
-        {
-            return pedidoMD.EliminarMD(this.PedCodigo);
-        }
-
-        /* Consulta un producto por su código */
-        public List<PedidoDP> ConsultarByCodDP()
-        {
-            // Asegúrate de que pedidoMD esté declarado e instanciado en esta clase
-            return pedidoMD.ConsultarByCodMD(this.PedCodigo);
-        }
-
-        /* Consulta los pedidos en la base de datos */
-        // Corrige el tipo de retorno de 'ProductoDP' a 'PedidoDP'
+        /* Método para consulta general */
         public List<PedidoDP> ConsultarAllDP()
         {
-            // El 'new List<PedidoDP>()' ahora sí coincide con el tipo de retorno
-            return pedidoMD.ConsultarAllMD() ?? new List<PedidoDP>();
+            PedidoMD modelo = new PedidoMD();
+            return modelo.ConsultarAllMD();
         }
 
-        /* Verifica si el producto existe en la base de datos para evitar repetidos*/
-        public bool VerificarDP()
+        /* Método para consulta por parámetro (código) */
+        public List<PedidoDP> ConsultarByCodDP(string codigo)
         {
-            return pedidoMD.VerificarMD(this.PedCodigo);
+            PedidoMD modelo = new PedidoMD();
+            return modelo.ConsultarByCodMD(codigo);
+        }
+
+        /* Métodos para Insertar */
+        public int InsertarDP()
+        {
+            return modelo.IngresarMD(this);
+        }
+
+        /* Método para Actualizar */
+        public int ActualizarDP()
+        {
+            return modelo.ActualizarMD(this);
+        }
+
+        /* Método para Eliminar */
+        public int EliminarDP()
+        {
+            return modelo.EliminarMD(this.PddCodigo);
         }
     }
 }

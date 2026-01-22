@@ -20,8 +20,14 @@
             <MenuItem Header="Gestión de pedidos"
                       Tag="Pedidos"
                       Click="Navigation_Click"/>
+            <MenuItem Header="Gestión del detalle de Pedido"
+                      Tag="DetallePedido"
+                      Click="Navigation_Click"/>
             <MenuItem Header="Gestión de Nota de venta"
                       Tag="NotaVenta"
+                      Click="Navigation_Click"/>
+            <MenuItem Header="Gestión del detalle de Nota de venta"
+                      Tag="DetalleNotaVenta"
                       Click="Navigation_Click"/>
             <MenuItem Header="Gestión de productos"
                       Tag="Productos"

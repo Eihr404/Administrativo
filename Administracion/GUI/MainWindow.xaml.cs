@@ -1,4 +1,5 @@
 ﻿using Administracion.Datos;
+using Administracion.DP;
 using Administracion.MD;
 using Oracle.ManagedDataAccess.Client;
 using System;
@@ -71,24 +72,30 @@ namespace Administracion.GUI
                 case "Proveedores":
                     MainContent.Content = new Proveedor();
                     break;
-
                 case "Clientes":
-                    MainContent.Content = new Cliente();
+                    MainContent.Content = new VentanaCliente();
                     break;
-
+                case "NotaVenta":
+                    MainContent.Content = new VentanaNotaVenta();
+                    break;
+                case "DetalleNotaVenta":
+                    MainContent.Content = new VentanaDetalleNotaVenta();
+                    break;
                 case "MateriaPrima":
-                    MainContent.Content = new MateriaPrima();
+                    MainContent.Content = new VentanaMateriaPrima();
                     break;
                 case "Productos":
                     MainContent.Content = new VentanaProducto();
                     break;
                 case "EstandarProduccion":
-                    MainContent.Content = new EstandarProduccion();
+                    MainContent.Content = new VentanaEstandarProduccion();
                     break;
                 case "Pedidos":
-                    MainContent.Content = new Pedido();
+                    MainContent.Content = new VentanaPedido();
                     break;
-
+                case "DetallePedido":
+                    MainContent.Content = new VentanaDetallePedido();
+                    break;
             }
         }
     }

@@ -20,9 +20,9 @@ namespace Administracion.DP
 
         public string ClasificacionDescripcion { get; set; } = string.Empty;
 
-        public string BodegaCodigo { get; set; } = "0000001"; // sucursal única
+        public string BodegaCodigo { get; set; } = "0000001";
 
-        public string Nombre { get; set; } = string.Empty;
+        public string ProNombre { get; set; } = string.Empty;
         public string Descripcion { get; set; } = string.Empty;
 
         public int Existencia { get; set; } = 0;

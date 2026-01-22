@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Administracion.GUI.VentanaEstandarProduccion"
+﻿<UserControl x:Class="Administracion.GUI.VentanaDetallePedido"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid x:Name="edpGrid" Margin="10">
+    <Grid x:Name="dppGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -13,27 +13,28 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="edpTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
-            <Button x:Name="edpBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="edpBtnConsultar_Click"/>
-            <Button x:Name="edpBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="edpBtnIngresar_Click"/>
-            <Button x:Name="edpBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="edpBtnModificar_Click"/>
-            <Button x:Name="edpBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="edpBtnEliminar_Click"/>
+            <TextBox x:Name="dppTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
+            <Button x:Name="dppBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="dppBtnConsultar_Click"/>
+            <Button x:Name="dppBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="dppBtnIngresar_Click"/>
+            <Button x:Name="dppBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="dppBtnModificar_Click"/>
+            <Button x:Name="dppBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="dppBtnEliminar_Click"/>
         </StackPanel>
 
-        <DataGrid x:Name="edpDatGri" 
+        <DataGrid x:Name="dppDatGri" 
                   Grid.Row="1" 
                   AutoGenerateColumns="False" 
                   SelectionMode="Single" 
                   IsReadOnly="True" 
                   MinHeight="200">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Cód. Materia Prima" Binding="{Binding MtpCodigo}" Width="Auto"/>
+                <DataGridTextColumn Header="Cód. Pedido" Binding="{Binding PddCodigo}" Width="Auto"/>
                 <DataGridTextColumn Header="Cód. Producto" Binding="{Binding ProCodigo}" Width="Auto"/>
-                <DataGridTextColumn Header="Cantidad" Binding="{Binding EdpCantidad}" Width="Auto"/>
+                <DataGridTextColumn Header="Cantidad" Binding="{Binding DppCantidad}" Width="Auto"/>
+                <DataGridTextColumn Header="Monto" Binding="{Binding DppMonto}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border x:Name="PanelFormularioEdp"
+        <Border x:Name="PanelFormularioDpp"
                 Grid.Row="2"
                 Margin="0,10,0,0"
                 Padding="15"
@@ -43,7 +44,7 @@
                 Background="#FAFAFA"
                 Visibility="Collapsed">
             <StackPanel>
-                <TextBlock Text="DETALLE ESTÁNDAR DE PRODUCCIÓN" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                <TextBlock Text="DETALLE DE PEDIDO" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -53,22 +54,26 @@
                     <Grid.RowDefinitions>
                         <RowDefinition/>
                         <RowDefinition/>
-                        <RowDefinition/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="5">
-                        <Label Content="Materia Prima:"/>
-                        <ComboBox x:Name="cmbMateriaPrima" DisplayMemberPath="MtpNombre" SelectedValuePath="MtpCodigo"/>
+                        <Label Content="Pedido:"/>
+                        <ComboBox x:Name="cmbPedidoDpp" DisplayMemberPath="PddCodigo" SelectedValuePath="PddCodigo"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="5">
                         <Label Content="Producto:"/>
-                        <ComboBox x:Name="cmbProducto" DisplayMemberPath="ProNombre" SelectedValuePath="Codigo"/>
+                        <ComboBox x:Name="cmbProductoDpp" DisplayMemberPath="ProNombre" SelectedValuePath="Codigo"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="5">
-                        <Label Content="Cantidad Necesaria:"/>
-                        <TextBox x:Name="txtEdpCantidad"/>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+                        <Label Content="Cantidad:"/>
+                        <TextBox x:Name="txtDppCantidad"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
+                        <Label Content="Monto:"/>
+                        <TextBox x:Name="txtDppMonto"/>
                     </StackPanel>
                 </Grid>
 

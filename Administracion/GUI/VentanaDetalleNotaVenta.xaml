@@ -1,11 +1,11 @@
-﻿<UserControl x:Class="Administracion.GUI.VentanaEstandarProduccion"
+﻿<UserControl x:Class="Administracion.GUI.VentanaDetalleNotaVenta"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid x:Name="edpGrid" Margin="10">
+    <Grid x:Name="dnvGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -13,27 +13,28 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="edpTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
-            <Button x:Name="edpBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="edpBtnConsultar_Click"/>
-            <Button x:Name="edpBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="edpBtnIngresar_Click"/>
-            <Button x:Name="edpBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="edpBtnModificar_Click"/>
-            <Button x:Name="edpBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="edpBtnEliminar_Click"/>
+            <TextBox x:Name="dnvTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center" ToolTip="Buscar por Número de Nota o Producto"/>
+            <Button x:Name="dnvBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="dnvBtnConsultar_Click"/>
+            <Button x:Name="dnvBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="dnvBtnIngresar_Click"/>
+            <Button x:Name="dnvBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="dnvBtnModificar_Click"/>
+            <Button x:Name="dnvBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="dnvBtnEliminar_Click"/>
         </StackPanel>
 
-        <DataGrid x:Name="edpDatGri" 
+        <DataGrid x:Name="dnvDatGri" 
                   Grid.Row="1" 
                   AutoGenerateColumns="False" 
                   SelectionMode="Single" 
                   IsReadOnly="True" 
                   MinHeight="200">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Cód. Materia Prima" Binding="{Binding MtpCodigo}" Width="Auto"/>
+                <DataGridTextColumn Header="Número Nota" Binding="{Binding NdvNumero}" Width="Auto"/>
                 <DataGridTextColumn Header="Cód. Producto" Binding="{Binding ProCodigo}" Width="Auto"/>
-                <DataGridTextColumn Header="Cantidad" Binding="{Binding EdpCantidad}" Width="Auto"/>
+                <DataGridTextColumn Header="Cantidad" Binding="{Binding DnvCantidad}" Width="Auto"/>
+                <DataGridTextColumn Header="Monto Detalle" Binding="{Binding DnvMonto}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border x:Name="PanelFormularioEdp"
+        <Border x:Name="PanelFormularioDnv"
                 Grid.Row="2"
                 Margin="0,10,0,0"
                 Padding="15"
@@ -43,7 +44,7 @@
                 Background="#FAFAFA"
                 Visibility="Collapsed">
             <StackPanel>
-                <TextBlock Text="DETALLE ESTÁNDAR DE PRODUCCIÓN" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+                <TextBlock Text="GESTIÓN DETALLE NOTA DE VENTA" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -51,24 +52,28 @@
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition/>
-                        <RowDefinition/>
-                        <RowDefinition/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Column="0" Margin="5">
-                        <Label Content="Materia Prima:"/>
-                        <ComboBox x:Name="cmbMateriaPrima" DisplayMemberPath="MtpNombre" SelectedValuePath="MtpCodigo"/>
+                        <Label Content="Nota de Venta:"/>
+                        <ComboBox x:Name="cmbNotaVenta" DisplayMemberPath="NdvNumero" SelectedValuePath="NdvNumero"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="5">
                         <Label Content="Producto:"/>
-                        <ComboBox x:Name="cmbProducto" DisplayMemberPath="ProNombre" SelectedValuePath="Codigo"/>
+                        <ComboBox x:Name="cmbProductoDnv" DisplayMemberPath="ProNombre" SelectedValuePath="ProCodigo"/>
                     </StackPanel>
 
-                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="5">
-                        <Label Content="Cantidad Necesaria:"/>
-                        <TextBox x:Name="txtEdpCantidad"/>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+                        <Label Content="Cantidad:"/>
+                        <TextBox x:Name="txtDnvCantidad"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
+                        <Label Content="Monto:"/>
+                        <TextBox x:Name="txtDnvMonto"/>
                     </StackPanel>
                 </Grid>
 

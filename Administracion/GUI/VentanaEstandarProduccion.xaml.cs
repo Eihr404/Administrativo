@@ -8,12 +8,12 @@ using System.Windows.Controls;
 
 namespace Administracion.GUI
 {
-    public partial class EstandarProduccion : UserControl
+    public partial class VentanaEstandarProduccion : UserControl
     {
         private EstandarProduccionDP seleccionadoDP;
         private bool esModificacion = false;
 
-        public EstandarProduccion()
+        public VentanaEstandarProduccion()
         {
             InitializeComponent();
             CargarDatosIniciales();
@@ -143,7 +143,6 @@ namespace Administracion.GUI
         {
             cmbMateriaPrima.SelectedIndex = -1;
             cmbProducto.SelectedIndex = -1;
-            txtEdpDescripcion.Text = "";
             txtEdpCantidad.Text = "";
         }
     }

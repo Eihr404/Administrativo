@@ -3,212 +3,197 @@ using Administracion.DP;
 using Oracle.ManagedDataAccess.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data;
 
 namespace Administracion.MD
 {
-    internal class PedidoMD
+    public class PedidoMD
     {
-        public bool IngresarMD(PedidoDP p)
-        {
-            const string sql = @"
-        INSERT INTO PEDIDO 
-        (PDD_CODIGO, CLI_CEDULA, PDD_COMENTARIO, PDD_ESTADO, PDD_UBICACION, PDD_MONTO_TOTAL, PDD_ABONO)
-        VALUES 
-        (:codigo, :cedula, :comentario, :estado, :ubicacion, :total, :abono)";
-
-            try
-            {
-                using OracleConnection conn = OracleDB.CrearConexion();
-                conn.Open();
-                using OracleCommand cmd = new OracleCommand(sql, conn);
-
-                // Mapeo con las propiedades de tu DP
-                cmd.Parameters.Add(":codigo", p.PedCodigo);
-                cmd.Parameters.Add(":cedula", p.CliCedula);
-                cmd.Parameters.Add(":comentario", p.PedComentario ?? (object)DBNull.Value);
-                cmd.Parameters.Add(":estado", p.PedEstado);
-                cmd.Parameters.Add(":ubicacion", p.PedUbicacion ?? (object)DBNull.Value);
-                cmd.Parameters.Add(":total", p.PedTotal);
-                cmd.Parameters.Add(":abono", p.PedAbono);
-
-                return cmd.ExecuteNonQuery() > 0;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al insertar el pedido en la base de datos.", ex);
-            }
-        }
-
-        public bool ModificarMD(PedidoDP p)
-        {
-            const string sql = @"
-        UPDATE PEDIDO SET
-            CLI_CEDULA = :cedula,
-            PDD_COMENTARIO = :comentario,
-            PDD_ESTADO = :estado,
-            PDD_UBICACION = :ubicacion,
-            PDD_MONTO_TOTAL = :total,
-            PDD_ABONO = :abono
-        WHERE PDD_CODIGO = :codigo";
-
-            try
-            {
-                using OracleConnection conn = OracleDB.CrearConexion();
-                conn.Open();
-                using OracleCommand cmd = new OracleCommand(sql, conn);
-
-                cmd.Parameters.Add(":cedula", p.CliCedula);
-                cmd.Parameters.Add(":comentario", p.PedComentario);
-                cmd.Parameters.Add(":estado", p.PedEstado);
-                cmd.Parameters.Add(":ubicacion", p.PedUbicacion);
-                cmd.Parameters.Add(":total", p.PedTotal);
-                cmd.Parameters.Add(":abono", p.PedAbono);
-                cmd.Parameters.Add(":codigo", p.PedCodigo); // El WHERE siempre va al final en el orden de parámetros de Oracle
-
-                return cmd.ExecuteNonQuery() > 0;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al modificar el pedido.", ex);
-            }
-        }
-
-        public bool EliminarMD(string codigo)
-        {
-            string sql = "DELETE FROM PEDIDO WHERE PDD_CODIGO = :codigo";
-
-            try
-            {
-                using OracleConnection conn = OracleDB.CrearConexion();
-                conn.Open();
-
-                using OracleCommand cmd = new OracleCommand(sql, conn);
-                cmd.Parameters.Add(":codigo", codigo);
-
-                int filas = cmd.ExecuteNonQuery();
-                return filas > 0;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"{OracleDB.GetConfig("error.general")} (EliminarMD): {ex.Message}");
-            }
-        }
-
-        public List<PedidoDP> ConsultarByCodMD(string codigo)
-        {
-            List<PedidoDP> pedidos = new List<PedidoDP>();
-
-            // Ajustamos el SQL a la tabla de pedidos y las columnas PDD_
-            string sql = @"
-        SELECT 
-            PDD_CODIGO, 
-            CLI_CEDULA, 
-            PDD_COMENTARIO, 
-            PDD_ESTADO, 
-            PDD_UBICACION, 
-            PDD_MONTO_TOTAL, 
-            PDD_ABONO
-        FROM PEDIDO
-        WHERE PDD_CODIGO = :codigo";
-
-            try
-            {
-                using OracleConnection conn = OracleDB.CrearConexion();
-                conn.Open();
-
-                using OracleCommand cmd = new OracleCommand(sql, conn);
-                // Es buena práctica usar OracleParameter para definir el tipo si es posible
-                cmd.Parameters.Add(new OracleParameter("codigo", codigo));
-
-                using OracleDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
-                {
-                    // Usamos el nuevo método MapearPedido que corregimos anteriormente
-                    pedidos.Add(MapearPedido(dr));
-                }
-            }
-            catch (Exception ex)
-            {
-                // Usamos la configuración de error general o un mensaje personalizado
-                string errorPrefix = OracleDB.GetConfig("error.general") ?? "Error en base de datos";
-                throw new Exception($"{errorPrefix} (ConsultarByCodMD Pedido): {ex.Message}");
-            }
-
-            return pedidos;
-        }
+        /* Método para consulta general */
         public List<PedidoDP> ConsultarAllMD()
         {
-            List<PedidoDP> pedidos = new();
-            const string sql = @"
-        SELECT PDD_CODIGO, CLI_CEDULA, PDD_COMENTARIO, PDD_ESTADO, PDD_UBICACION, PDD_MONTO_TOTAL, PDD_ABONO 
-        FROM PEDIDO";
+            List<PedidoDP> lista = new List<PedidoDP>();
+            string query = @"
+                    SELECT 
+                        PDD_CODIGO,
+                        CLI_CEDULA,
+                        PDD_COMENTARIO,
+                        PDD_ESTADO,
+                        PDD_UBICACION,
+                        PDD_MONTO_TOTAL,
+                        PDD_ABONO
+                    FROM PEDIDO";
 
-            try
+            using (OracleConnection conn = OracleDB.CrearConexion())
             {
-                using var conn = OracleDB.CrearConexion();
-                conn.Open();
-                using var cmd = new OracleCommand(sql, conn);
-                using var dr = cmd.ExecuteReader();
-                while (dr.Read())
+                OracleCommand cmd = new OracleCommand(query, conn);
+                try
                 {
-                    pedidos.Add(new PedidoDP
+                    conn.Open();
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
                     {
-                        // ÍNDICES: 0=CODIGO, 1=CEDULA, 2=COMENTARIO, 3=ESTADO, 4=UBICACION, 5=TOTAL, 6=ABONO
-                        PedCodigo = dr.GetString(0),
-                        CliCedula = dr.GetString(1),
-                        PedComentario = dr.IsDBNull(2) ? "" : dr.GetString(2),
-                        PedEstado = dr.IsDBNull(3) ? "" : dr.GetString(3),
-                        PedUbicacion = dr.IsDBNull(4) ? "" : dr.GetString(4),
-                        PedTotal = dr.IsDBNull(5) ? 0 : Convert.ToDouble(dr.GetDecimal(5)),
-                        PedAbono = dr.IsDBNull(6) ? 0 : Convert.ToDouble(dr.GetDecimal(6))
-                    });
+                        lista.Add(new PedidoDP
+                        {
+                            PddCodigo = reader["PDD_CODIGO"].ToString(),
+                            CliCedula = reader["CLI_CEDULA"].ToString(),
+                            PddComentario = reader["PDD_COMENTARIO"]?.ToString() ?? "",
+                            PddEstado = reader["PDD_ESTADO"]?.ToString() ?? "",
+                            PddUbicacion = reader["PDD_UBICACION"]?.ToString() ?? "",
+
+                            PddMontoTotal = reader.IsDBNull(reader.GetOrdinal("PDD_MONTO_TOTAL")) ? 0 : Convert.ToDouble(reader["PDD_MONTO_TOTAL"]),
+                            PddAbono = reader.IsDBNull(reader.GetOrdinal("PDD_ABONO")) ? 0 : Convert.ToDouble(reader["PDD_ABONO"])
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{OracleDB.GetConfig("error.general")} (ConsultarAllMD): {ex.Message}");
                 }
             }
-            catch (Exception ex)
+            return lista;
+        }
+
+        /* Método para consulta por parámetro (código) */
+        public List<PedidoDP> ConsultarByCodMD(string codigo)
+        {
+            List<PedidoDP> lista = new List<PedidoDP>();
+            string query = "SELECT * FROM PEDIDO WHERE PDD_CODIGO = :codigo";
+
+            using (OracleConnection conn = OracleDB.CrearConexion())
             {
-                throw new Exception("Error al listar los pedidos.", ex);
+                OracleCommand cmd = new OracleCommand(query, conn);
+                cmd.Parameters.Add(new OracleParameter("codigo", codigo));
+                try
+                {
+                    conn.Open();
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        lista.Add(new PedidoDP
+                        {
+                            PddCodigo = reader["PDD_CODIGO"].ToString(),
+                            CliCedula = reader["CLI_CEDULA"].ToString(),
+                            PddComentario = reader["PDD_COMENTARIO"]?.ToString() ?? "",
+                            PddEstado = reader["PDD_ESTADO"]?.ToString() ?? "",
+                            PddUbicacion = reader["PDD_UBICACION"]?.ToString() ?? "",
+
+                            PddMontoTotal = reader.IsDBNull(reader.GetOrdinal("PDD_MONTO_TOTAL")) ? 0 : Convert.ToDouble(reader["PDD_MONTO_TOTAL"]),
+                            PddAbono = reader.IsDBNull(reader.GetOrdinal("PDD_ABONO")) ? 0 : Convert.ToDouble(reader["PDD_ABONO"])
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{OracleDB.GetConfig("error.general")} (ConsultarByCodMD): {ex.Message}");
+                }
             }
-            return pedidos;
+            return lista;
         }
 
-        private PedidoDP MapearPedido(OracleDataReader dr)
+        /* Método para ingresar nuevo pedido */
+        public int IngresarMD(PedidoDP dp)
         {
-            return new PedidoDP
-            {
-                // El orden depende del SELECT: 
-                // 0:PDD_CODIGO, 1:CLI_CEDULA, 2:PDD_COMENTARIO, 3:PDD_ESTADO, 4:PDD_UBICACION, 5:PDD_MONTO_TOTAL, 6:PDD_ABONO
+            string sql = @"
+                    INSERT INTO PEDIDO
+                    (
+                        PDD_CODIGO,
+                        CLI_CEDULA,
+                        PDD_COMENTARIO,
+                        PDD_ESTADO,
+                        PDD_UBICACION,
+                        PDD_MONTO_TOTAL,
+                        PDD_ABONO
+                    )
+                    VALUES
+                    (
+                        :cod,
+                        :ced,
+                        :com,
+                        :est,
+                        :ubi,
+                        :tot,
+                        :abo
+                    )";
 
-                PedCodigo = dr.IsDBNull(0) ? "" : dr.GetString(0),
-                CliCedula = dr.IsDBNull(1) ? "" : dr.GetString(1),
-                PedComentario = dr.IsDBNull(2) ? "" : dr.GetString(2),
-                PedEstado = dr.IsDBNull(3) ? "" : dr.GetString(3),
-                PedUbicacion = dr.IsDBNull(4) ? "" : dr.GetString(4),
-
-                // Para campos NUMBER de Oracle, es más seguro usar GetDouble o Convert.ToDouble
-                PedTotal = dr.IsDBNull(5) ? 0.0 : Convert.ToDouble(dr.GetValue(5)),
-                PedAbono = dr.IsDBNull(6) ? 0.0 : Convert.ToDouble(dr.GetValue(6))
-            };
-        }
-
-
-
-        public bool VerificarMD(string codigo)
-        {
-            string sql = "SELECT COUNT(*) FROM PRODUCTO WHERE PRO_Codigo = :codigo";
+            using OracleConnection conn = OracleDB.CrearConexion();
             try
             {
-                using OracleConnection conn = OracleDB.CrearConexion();
-                conn.Open();
                 using OracleCommand cmd = new OracleCommand(sql, conn);
-                cmd.Parameters.Add(":codigo", codigo);
-                return Convert.ToInt32(cmd.ExecuteScalar()) > 0;
+
+                cmd.Parameters.Add(":cod", dp.PddCodigo);
+                cmd.Parameters.Add(":ced", dp.CliCedula);
+                cmd.Parameters.Add(":com", dp.PddComentario);
+                cmd.Parameters.Add(":est", dp.PddEstado);
+                cmd.Parameters.Add(":ubi", dp.PddUbicacion);
+                cmd.Parameters.Add(":tot", dp.PddMontoTotal);
+                cmd.Parameters.Add(":abo", dp.PddAbono);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery();
             }
             catch (Exception ex)
             {
-                throw new Exception($"{OracleDB.GetConfig("error.general")} (VerificarMD): {ex.Message}");
+                throw new Exception(
+                    $"{OracleDB.GetConfig("error.general")} (IngresarMD): {ex.Message}");
+            }
+        }
+
+        /* Método para actualizar pedido */
+        public int ActualizarMD(PedidoDP dp)
+        {
+            string sql = @"
+                    UPDATE PEDIDO
+                    SET
+                        CLI_CEDULA = :ced,
+                        PDD_COMENTARIO = :com,
+                        PDD_ESTADO = :est,
+                        PDD_UBICACION = :ubi,
+                        PDD_MONTO_TOTAL = :tot,
+                        PDD_ABONO = :abo
+                    WHERE PDD_CODIGO = :cod";
+
+            using OracleConnection conn = OracleDB.CrearConexion();
+            try
+            {
+                using OracleCommand cmd = new OracleCommand(sql, conn);
+
+                cmd.Parameters.Add(":ced", dp.CliCedula);
+                cmd.Parameters.Add(":com", dp.PddComentario);
+                cmd.Parameters.Add(":est", dp.PddEstado);
+                cmd.Parameters.Add(":ubi", dp.PddUbicacion);
+                cmd.Parameters.Add(":tot", dp.PddMontoTotal);
+                cmd.Parameters.Add(":abo", dp.PddAbono);
+                cmd.Parameters.Add(":cod", dp.PddCodigo);
+
+                conn.Open();
+                return cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(
+                    $"{OracleDB.GetConfig("error.general")} (ActualizarMD): {ex.Message}");
+            }
+        }
+
+        /* Método para eliminar pedido */
+        public int EliminarMD(string codigo)
+        {
+            string sql = "DELETE FROM PEDIDO WHERE PDD_CODIGO = :cod";
+
+            using (OracleConnection conn = OracleDB.CrearConexion())
+            {
+                try
+                {
+                    OracleCommand cmd = new OracleCommand(sql, conn);
+                    cmd.Parameters.Add(new OracleParameter("cod", codigo));
+                    conn.Open();
+                    return cmd.ExecuteNonQuery();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"{OracleDB.GetConfig("error.general")} (EliminarMD): {ex.Message}");
+                }
             }
         }
     }

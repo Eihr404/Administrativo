@@ -12,12 +12,22 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="dnvTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center" ToolTip="Buscar por Número de Nota o Producto"/>
-            <Button x:Name="dnvBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="dnvBtnConsultar_Click"/>
-            <Button x:Name="dnvBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="dnvBtnIngresar_Click"/>
-            <Button x:Name="dnvBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="dnvBtnModificar_Click"/>
-            <Button x:Name="dnvBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="dnvBtnEliminar_Click"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Ingrese el código del registro a buscar:" 
+                   Margin="0,0,0,5" 
+                   FontWeight="SemiBold" 
+                   Foreground="#555"/>
+
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="dnvTxtblBuscarCodigo" 
+                     Width="250" 
+                     VerticalContentAlignment="Center" 
+                     ToolTip="Buscar por Número de Nota o codigo de Producto"/>
+                <Button x:Name="dnvBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="dnvBtnConsultar_Click"/>
+                <Button x:Name="dnvBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="dnvBtnIngresar_Click"/>
+                <Button x:Name="dnvBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="dnvBtnModificar_Click"/>
+                <Button x:Name="dnvBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="dnvBtnEliminar_Click"/>
+            </StackPanel>
         </StackPanel>
 
         <DataGrid x:Name="dnvDatGri" 

@@ -12,12 +12,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="pddTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center" ToolTip="Buscar por código de pedido"/>
-            <Button x:Name="pddBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="pddBtnConsultar_Click"/>
-            <Button x:Name="pddBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="pddBtnIngresar_Click"/>
-            <Button x:Name="pddBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="pddBtnModificar_Click"/>
-            <Button x:Name="pddBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="pddBtnEliminar_Click"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Ingrese el código del registro a buscar:" 
+                Margin="0,0,0,5" 
+                FontWeight="SemiBold" 
+                Foreground="#555"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="pddTxtblBuscarCodigo" 
+                      Width="250" 
+                      VerticalContentAlignment="Center" 
+                      ToolTip="Buscar por codigo de Pedido"/>
+                <Button x:Name="pddBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="pddBtnConsultar_Click"/>
+                <Button x:Name="pddBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="pddBtnIngresar_Click"/>
+                <Button x:Name="pddBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="pddBtnModificar_Click"/>
+                <Button x:Name="pddBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="pddBtnEliminar_Click"/>
+            </StackPanel>
         </StackPanel>
 
         <DataGrid x:Name="pddDatGri" 

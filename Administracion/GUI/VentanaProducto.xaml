@@ -12,12 +12,21 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBox x:Name="prdTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
-            <Button x:Name="prdBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="prdBtnConsultar_Click"/>
-            <Button x:Name="prdBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="prdBtnIngresar_Click"/>
-            <Button x:Name="prdBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="prdBtnModificar_Click"/>
-            <Button x:Name="prdBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="prdBtnEliminar_Click"/>
+        <StackPanel Grid.Row="0" Margin="0,0,0,15">
+            <TextBlock Text="Ingrese el código del registro a buscar:" 
+                Margin="0,0,0,5" 
+                FontWeight="SemiBold" 
+                Foreground="#555"/>
+            <StackPanel Orientation="Horizontal">
+                <TextBox x:Name="prdTxtblBuscarCodigo" 
+                      Width="250" 
+                      VerticalContentAlignment="Center" 
+                      ToolTip="Buscar por codigo de Producto"/>
+                <Button x:Name="prdBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="prdBtnConsultar_Click"/>
+                <Button x:Name="prdBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="prdBtnIngresar_Click"/>
+                <Button x:Name="prdBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="prdBtnModificar_Click"/>
+                <Button x:Name="prdBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="prdBtnEliminar_Click"/>
+            </StackPanel>
         </StackPanel>
 
         <DataGrid x:Name="prdDatGri" 

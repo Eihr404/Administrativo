@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="700" d:DesignWidth="1000">
+             d:DesignHeight="750" d:DesignWidth="1000">
     <Grid x:Name="prdGrid" Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -12,138 +12,123 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="0,0,0,10" HorizontalAlignment="Center">
-            <Label Content="Aquí ingrese el código para buscar:" 
-           FontSize="11" 
-           Foreground="Gray" 
-           Padding="0,0,0,2"/>
-
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="prdTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
-                <Button x:Name="prdBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="prdBtnConsultar_Click"/>
-                <Button x:Name="prdBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="prdBtnIngresar_Click"/>
-                <Button x:Name="prdBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="prdBtnModificar_Click"/>
-                <Button x:Name="prdBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="prdBtnEliminar_Click"/>
-            </StackPanel>
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBox x:Name="prdTxtblBuscarCodigo" Width="250" VerticalContentAlignment="Center"/>
+            <Button x:Name="prdBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="prdBtnConsultar_Click"/>
+            <Button x:Name="prdBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="prdBtnIngresar_Click"/>
+            <Button x:Name="prdBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="prdBtnModificar_Click"/>
+            <Button x:Name="prdBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="prdBtnEliminar_Click"/>
         </StackPanel>
 
-        <!-- DataGrid de Productos -->
         <DataGrid x:Name="prdDatGri" 
           Grid.Row="1" 
           AutoGenerateColumns="False" 
           SelectionMode="Single" 
-          IsReadOnly="True" Height="Auto">
+          IsReadOnly="True" 
+          MinHeight="200"
+          VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn x:Name="prdDatGriColCodigo" Header="Código"
-                                    Binding="{Binding Codigo}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColCateg" Header="Categoría"
-                                    Binding="{Binding CategoriaDescripcion}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColClasificacion" Header="Clasificacion"
-                                    Binding="{Binding ClasificacionDescripcion}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColNombre" Header="Nombre"
-                                    Binding="{Binding Nombre}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColDescrip" Header="Descripción"
-                                    Binding="{Binding Descripcion}"
-                                    Width="Auto">
+                <DataGridTextColumn Header="Código" Binding="{Binding Codigo}" Width="Auto"/>
+                <DataGridTextColumn Header="Nombre" Binding="{Binding ProNombre}" Width="150"/>
+
+                <DataGridTextColumn Header="Categoría" Binding="{Binding CategoriaDescripcion}" Width="Auto"/>
+                <DataGridTextColumn Header="Clasificación" Binding="{Binding ClasificacionDescripcion}" Width="Auto"/>
+                <DataGridTextColumn Header="Bodega" Binding="{Binding BodegaCodigo}" Width="Auto"/>
+                <DataGridTextColumn Header="Existencia" Binding="{Binding Existencia}" Width="Auto">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
+                            <Setter Property="HorizontalAlignment" Value="Center"/>
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn x:Name="prdDatGriColPrecio" Header="Precio de venta"
-                                    Binding="{Binding PrecioVenta}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColPrecioAnt" Header="Precio de venta anterior"
-                                    Binding="{Binding PrecioVentaAnt}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColUtilidad" Header="Utilidad"
-                                    Binding="{Binding Utilidad}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColImagen" Header="Imagen"
-                                    Binding="{Binding Imagen}"
-                                    Width="Auto"/>
-                <DataGridTextColumn x:Name="prdDatGriColAltText" Header="Imagen - Texto alternativo"
-                                    Binding="{Binding AltTextImagen}"
-                                    Width="Auto">
-                    <DataGridTextColumn.ElementStyle>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="TextWrapping" Value="WrapWithOverflow"/>
-                        </Style>
-                    </DataGridTextColumn.ElementStyle>
-                </DataGridTextColumn>
+
+                <DataGridTextColumn Header="Precio Ant." Binding="{Binding PrecioVentaAnt, StringFormat=\{0:C\}}" Width="Auto"/>
+                <DataGridTextColumn Header="Precio Venta" Binding="{Binding PrecioVenta, StringFormat=\{0:C\}}" Width="Auto"/>
+                <DataGridTextColumn Header="Utilidad" Binding="{Binding Utilidad, StringFormat=\{0:C\}}" Width="Auto"/>
+
+                <DataGridTextColumn Header="Imagen (URL)" Binding="{Binding Imagen}" Width="100"/>
+                <DataGridTextColumn Header="Alt Text" Binding="{Binding AltTextImagen}" Width="100"/>
+                <DataGridTextColumn Header="Descripción" Binding="{Binding Descripcion}" Width="*"/>
             </DataGrid.Columns>
         </DataGrid>
 
-        <Border x:Name="PanelFormularioPrd" Grid.Row="2" Margin="0,10,0,0" Padding="15" 
-                BorderBrush="#CCC" BorderThickness="1" CornerRadius="6" Background="#FAFAFA" Visibility="Collapsed">
-            <ScrollViewer VerticalScrollBarVisibility="Auto" MaxHeight="400">
-                <StackPanel>
-                    <TextBlock x:Name="lblTituloForm" Text="DETALLE DEL PRODUCTO" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                            <RowDefinition/>
-                        </Grid.RowDefinitions>
+        <Border x:Name="PanelFormularioPrd" Grid.Row="2" Margin="0,10,0,0" Padding="15" BorderBrush="#CCC" BorderThickness="1" CornerRadius="6" Background="#FAFAFA" Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock x:Name="lblTituloForm" Text="DETALLE DEL PRODUCTO" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
 
-                        <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
-                            <Label Content="Código:"/>
-                            <TextBox x:Name="txtPrdCodigo"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Margin="5">
-                            <Label Content="Nombre:"/>
-                            <TextBox x:Name="txtPrdNombre"/>
-                        </StackPanel>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-                        <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
-                            <Label Content="Categoría:"/>
-                            <ComboBox x:Name="cmbCategoria" DisplayMemberPath="Descripcion" SelectedValuePath="Codigo"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
-                            <Label Content="Clasificación:"/>
-                            <ComboBox x:Name="cmbClasificacion" DisplayMemberPath="Nombre" SelectedValuePath="Codigo"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="1" Grid.Column="2" Margin="5"/>
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+                        <Label Content="Código:"/>
+                        <TextBox x:Name="txtPrdCodigo"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
+                        <Label Content="Nombre:"/>
+                        <TextBox x:Name="txtPrdNombre"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="0" Grid.Column="2" Margin="5">
+                        <Label Content="Existencia (Stock):"/>
+                        <TextBox x:Name="txtPrdExistencia"/>
+                    </StackPanel>
 
-                        <StackPanel Grid.Row="2" Grid.Column="0" Margin="5">
-                            <Label Content="Precio Venta:"/>
-                            <TextBox x:Name="txtPrdPrecio"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.Column="1" Margin="5">
-                            <Label Content="Utilidad:"/>
-                            <TextBox x:Name="txtPrdUtilidad"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="2" Grid.Column="2" Margin="5">
-                            <Label Content="Imagen del producto"/>
-                            <TextBox x:Name="txtPrdImagen"/>
-                        </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
+                        <Label Content="Categoría:"/>
+                        <ComboBox x:Name="cmbCategoria" DisplayMemberPath="Descripcion" SelectedValuePath="Codigo"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
+                        <Label Content="Clasificación:"/>
+                        <ComboBox x:Name="cmbClasificacion" DisplayMemberPath="Nombre" SelectedValuePath="Codigo"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" Grid.Column="2" Margin="5">
+                        <Label Content="Bodega:"/>
+                        <ComboBox x:Name="cmbBodega" DisplayMemberPath="Nombre" SelectedValuePath="Codigo"/>
+                    </StackPanel>
 
-                        <StackPanel Grid.Row="3" Grid.Column="3" Margin="5">
-                            <Label Content="Texto Alt Imagen:"/>
-                            <TextBox x:Name="txtPrdAltImagen"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Margin="5">
-                            <Label Content="Descripción:"/>
-                            <TextBox x:Name="txtPrdDesc" Height="40" TextWrapping="Wrap"/>
-                        </StackPanel>
-                    </Grid>
-                    <UniformGrid Columns="2" Margin="0,15,0,0">
-                        <Button Content="Guardar" Margin="5" Click="BtnGuardar_Click" Background="#DFF0D8"/>
-                        <Button Content="Cancelar" Margin="5" Click="BtnCancelar_Click"/>
-                    </UniformGrid>
-                </StackPanel>
-            </ScrollViewer>
+                    <StackPanel Grid.Row="2" Grid.Column="0" Margin="5">
+                        <Label Content="Precio Venta Actual:"/>
+                        <TextBox x:Name="txtPrdPrecio"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="1" Margin="5">
+                        <Label Content="Precio Anterior:"/>
+                        <TextBox x:Name="txtPrdPrecioAnt" IsReadOnly="True" Background="#EEE"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="2" Grid.Column="2" Margin="5">
+                        <Label Content="Utilidad:"/>
+                        <TextBox x:Name="txtPrdUtilidad"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="3" Grid.Column="0" Margin="5">
+                        <Label Content="Imagen (URL/Ruta):"/>
+                        <TextBox x:Name="txtPrdImagen"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="2" Margin="5">
+                        <Label Content="Texto Alternativo (Imagen):"/>
+                        <TextBox x:Name="txtPrdAltImagen"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="4" Grid.ColumnSpan="3" Margin="5">
+                        <Label Content="Descripción Detallada:"/>
+                        <TextBox x:Name="txtPrdDesc" Height="50" TextWrapping="Wrap" AcceptsReturn="True"/>
+                    </StackPanel>
+                </Grid>
+
+                <UniformGrid Columns="2" Margin="0,15,0,0">
+                    <Button Content="Guardar" Margin="5" Click="BtnGuardar_Click" Background="#DFF0D8" FontWeight="Bold"/>
+                    <Button Content="Cancelar" Margin="5" Click="BtnCancelar_Click"/>
+                </UniformGrid>
+            </StackPanel>
         </Border>
     </Grid>
 </UserControl>

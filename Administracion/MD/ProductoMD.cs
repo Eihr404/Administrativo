@@ -55,8 +55,8 @@ namespace Administracion.MD
                 cmd.Parameters.Add(":codigo", p.Codigo);
                 cmd.Parameters.Add(":catCodigo", p.CategoriaCodigo);
                 cmd.Parameters.Add(":claCodigo", p.ClasificacionCodigo);
-                cmd.Parameters.Add(":bodCodigo", p.BodegaCodigo);   // OBLIGATORIO
-                cmd.Parameters.Add(":nombre", p.Nombre);
+                cmd.Parameters.Add(":bodCodigo", p.BodegaCodigo);   
+                cmd.Parameters.Add(":nombre", p.ProNombre);
                 cmd.Parameters.Add(":descripcion", p.Descripcion);
                 cmd.Parameters.Add(":existencia", p.Existencia);
                 cmd.Parameters.Add(":precio", p.PrecioVenta);
@@ -81,7 +81,7 @@ namespace Administracion.MD
                 UPDATE PRODUCTO SET
                     CAT_Codigo = :catCodigo,
                     CLA_Codigo = :claCodigo,
-                    UME_Codigo = :umeCodigo,
+                    BOD_Codigo = :bodCodigo,
                     PRO_Nombre = :nombre,
                     PRO_Descripcion = :descripcion,
                     PRO_Precio_venta = :precio,
@@ -99,7 +99,8 @@ namespace Administracion.MD
                 using OracleCommand cmd = new OracleCommand(sql, conn);
                 cmd.Parameters.Add(":catCodigo", p.CategoriaCodigo);
                 cmd.Parameters.Add(":claCodigo", p.ClasificacionCodigo);
-                cmd.Parameters.Add(":nombre", p.Nombre);
+                cmd.Parameters.Add(":bodCodigo", p.BodegaCodigo); // Se agrega la bodega
+                cmd.Parameters.Add(":nombre", p.ProNombre);
                 cmd.Parameters.Add(":descripcion", p.Descripcion);
                 cmd.Parameters.Add(":precio", p.PrecioVenta);
                 cmd.Parameters.Add(":precioAnt", p.PrecioVentaAnt);
@@ -144,25 +145,24 @@ namespace Administracion.MD
             List<ProductoDP> producto = new List<ProductoDP>();
             string sql = @"
                 SELECT 
-                    p.PRO_CODIGO,
-                    c.CAT_CODIGO,
-                    c.CAT_DESCRIPCION,
-                    cl.CLA_CODIGO,
-                    cl.CLA_NOMBRE,
-                    p.PRO_NOMBRE,
-                    p.PRO_DESCRIPCION,
-                    p.PRO_PRECIO_VENTA,
-                    p.PRO_PRECIO_VENTA_ANT,
-                    p.PRO_UTILIDAD,
-                    p.PRO_IMAGEN,
-                    p.PRO_ALT_IMAGEN
+                    p.PRO_CODIGO,           -- 0
+                    p.CAT_CODIGO,           -- 1
+                    c.CAT_DESCRIPCION,      -- 2
+                    p.CLA_CODIGO,           -- 3
+                    cl.CLA_NOMBRE,          -- 4
+                    p.BOD_CODIGO,           -- 5 (Código de bodega)
+                    p.PRO_NOMBRE,           -- 6
+                    p.PRO_DESCRIPCION,      -- 7
+                    p.PRO_EXISTENCIA,       -- 8
+                    p.PRO_PRECIO_VENTA,     -- 9
+                    p.PRO_PRECIO_VENTA_ANT, -- 10
+                    p.PRO_UTILIDAD,         -- 11
+                    p.PRO_IMAGEN,           -- 12
+                    p.PRO_ALT_IMAGEN        -- 13
                 FROM PRODUCTO p
-                JOIN CATEGORIA c 
-                    ON c.CAT_CODIGO = p.CAT_CODIGO
-                JOIN CLASIFICACION cl 
-                    ON cl.CLA_CODIGO = p.CLA_CODIGO
+                JOIN CATEGORIA c ON c.CAT_CODIGO = p.CAT_CODIGO
+                JOIN CLASIFICACION cl ON cl.CLA_CODIGO = p.CLA_CODIGO
                 WHERE p.PRO_Codigo = :codigo";
-
             try
             {
                 using OracleConnection conn = OracleDB.CrearConexion();
@@ -189,25 +189,23 @@ namespace Administracion.MD
             List<ProductoDP> productos = new();
             string sql = @"
                 SELECT 
-                    p.PRO_CODIGO,
-                    c.CAT_CODIGO,
-                    c.CAT_DESCRIPCION,
-                    cl.CLA_CODIGO,
-                    cl.CLA_NOMBRE,
-                    p.PRO_NOMBRE,
-                    p.PRO_DESCRIPCION,
-                    p.PRO_PRECIO_VENTA,
-                    p.PRO_PRECIO_VENTA_ANT,
-                    p.PRO_UTILIDAD,
-                    p.PRO_IMAGEN,
-                    p.PRO_ALT_IMAGEN
+                    p.PRO_CODIGO,           -- 0
+                    p.CAT_CODIGO,           -- 1
+                    c.CAT_DESCRIPCION,      -- 2
+                    p.CLA_CODIGO,           -- 3
+                    cl.CLA_NOMBRE,          -- 4
+                    p.BOD_CODIGO,           -- 5 
+                    p.PRO_NOMBRE,           -- 6
+                    p.PRO_DESCRIPCION,      -- 7
+                    p.PRO_EXISTENCIA,       -- 8
+                    p.PRO_PRECIO_VENTA,     -- 9
+                    p.PRO_PRECIO_VENTA_ANT, -- 10
+                    p.PRO_UTILIDAD,         -- 11
+                    p.PRO_IMAGEN,           -- 12
+                    p.PRO_ALT_IMAGEN        -- 13
                 FROM PRODUCTO p
-                JOIN CATEGORIA c 
-                    ON c.CAT_CODIGO = p.CAT_CODIGO
-                JOIN CLASIFICACION cl 
-                    ON cl.CLA_CODIGO = p.CLA_CODIGO
-                ";
-
+                JOIN CATEGORIA c ON c.CAT_CODIGO = p.CAT_CODIGO
+                JOIN CLASIFICACION cl ON cl.CLA_CODIGO = p.CLA_CODIGO";
             try
             {
                 using OracleConnection conn = OracleDB.CrearConexion();
@@ -236,16 +234,15 @@ namespace Administracion.MD
                 CategoriaDescripcion = dr.GetString(2),
                 ClasificacionCodigo = dr.GetString(3),
                 ClasificacionDescripcion = dr.GetString(4),
-
-                Nombre = dr.GetString(5),
-                Descripcion = dr.IsDBNull(6) ? "" : dr.GetString(6),
-
-                PrecioVenta = dr.GetDouble(7),
-                PrecioVentaAnt = dr.IsDBNull(8) ? 0 : dr.GetDouble(8),
-                Utilidad = dr.GetDouble(9),
-
-                Imagen = dr.IsDBNull(10) ? "" : dr.GetString(10),
-                AltTextImagen = dr.IsDBNull(11) ? "" : dr.GetString(11)
+                BodegaCodigo = dr.GetString(5),          
+                ProNombre = dr.GetString(6),
+                Descripcion = dr.IsDBNull(7) ? "" : dr.GetString(7),
+                Existencia = dr.IsDBNull(8) ? 0 : Convert.ToInt32(dr.GetValue(8)),
+                PrecioVenta = dr.GetDouble(9),
+                PrecioVentaAnt = dr.IsDBNull(10) ? 0 : dr.GetDouble(10),
+                Utilidad = dr.GetDouble(11),
+                Imagen = dr.IsDBNull(12) ? "" : dr.GetString(12),
+                AltTextImagen = dr.IsDBNull(13) ? "" : dr.GetString(13)
             };
         }
 

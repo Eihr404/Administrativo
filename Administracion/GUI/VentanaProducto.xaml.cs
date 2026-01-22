@@ -40,6 +40,7 @@ namespace Administracion.GUI
                 // Cargamos los catálogos necesarios para el formulario
                 cmbCategoria.ItemsSource = new CategoriaDP().ConsultarTodos();
                 cmbClasificacion.ItemsSource = new ClasificacionDP().ConsultarTodos();
+                cmbBodega.ItemsSource = new BodegaDP().ConsultarTodos();
             }
             catch (Exception ex)
             {
@@ -91,21 +92,26 @@ namespace Administracion.GUI
             }
 
             esModificacion = true;
-            this.productoDP = seleccionado; // Guardamos la referencia para el PrecioVentaAnt
+            this.productoDP = seleccionado;
             lblTituloForm.Text = OracleDB.GetConfig("titulo.formulario.editar");
 
             // Mapeo de atributos al formulario
             txtPrdCodigo.Text = seleccionado.Codigo;
             txtPrdCodigo.IsEnabled = false;
-            txtPrdNombre.Text = seleccionado.Nombre;
+            txtPrdNombre.Text = seleccionado.ProNombre;
             txtPrdDesc.Text = seleccionado.Descripcion;
+
+            txtPrdExistencia.Text = seleccionado.Existencia.ToString();
+            txtPrdPrecioAnt.Text = seleccionado.PrecioVentaAnt.ToString();
+            txtPrdImagen.Text = seleccionado.Imagen;
+
             txtPrdPrecio.Text = seleccionado.PrecioVenta.ToString();
             txtPrdUtilidad.Text = seleccionado.Utilidad.ToString();
             txtPrdAltImagen.Text = seleccionado.AltTextImagen;
 
-            // Asignación de Combos (SelectedValue usa el SelectedValuePath del XAML)
             cmbCategoria.SelectedValue = seleccionado.CategoriaCodigo;
             cmbClasificacion.SelectedValue = seleccionado.ClasificacionCodigo;
+            cmbBodega.SelectedValue = seleccionado.BodegaCodigo;
 
             PanelFormularioPrd.Visibility = Visibility.Visible;
         }
@@ -120,8 +126,10 @@ namespace Administracion.GUI
                     return;
                 }
 
+                // Validación de formatos numéricos incluyendo la nueva Existencia
                 if (!double.TryParse(txtPrdPrecio.Text, out double precio) ||
-                    !double.TryParse(txtPrdUtilidad.Text, out double utilidad))
+                    !double.TryParse(txtPrdUtilidad.Text, out double utilidad) ||
+                    !int.TryParse(txtPrdExistencia.Text, out int existencia))
                 {
                     MessageBox.Show(OracleDB.GetConfig("error.formato.numerico"));
                     return;
@@ -130,14 +138,15 @@ namespace Administracion.GUI
                 if (MessageBox.Show(OracleDB.GetConfig("mensaje.confirmacion.guardar"),
                     OracleDB.GetConfig("titulo.confirmacion"), MessageBoxButton.YesNo) == MessageBoxResult.No) return;
 
-                // Creación del objeto con todos los atributos necesarios
                 ProductoDP datos = new ProductoDP
                 {
                     Codigo = txtPrdCodigo.Text.Trim(),
-                    Nombre = txtPrdNombre.Text.Trim(),
+                    ProNombre = txtPrdNombre.Text.Trim(),
                     Descripcion = txtPrdDesc.Text.Trim(),
                     PrecioVenta = precio,
                     Utilidad = utilidad,
+                    Existencia = existencia, 
+                    BodegaCodigo = cmbBodega.SelectedValue.ToString(), 
                     Imagen = txtPrdImagen.Text.Trim(),
                     AltTextImagen = txtPrdAltImagen.Text.Trim(),
                     CategoriaCodigo = cmbCategoria.SelectedValue.ToString(),
@@ -183,12 +192,14 @@ namespace Administracion.GUI
             txtPrdNombre.Clear();
             txtPrdDesc.Clear();
             txtPrdPrecio.Clear();
+            txtPrdPrecioAnt.Clear(); 
+            txtPrdExistencia.Clear();
             txtPrdUtilidad.Clear();
             txtPrdImagen.Clear();
             txtPrdAltImagen.Clear();
             cmbCategoria.SelectedIndex = -1;
             cmbClasificacion.SelectedIndex = -1;
-     
+            cmbBodega.SelectedIndex = -1;
         }
 
         private bool CamposInvalidos()
@@ -196,7 +207,8 @@ namespace Administracion.GUI
             return string.IsNullOrWhiteSpace(txtPrdCodigo.Text) ||
                    string.IsNullOrWhiteSpace(txtPrdNombre.Text) ||
                    cmbCategoria.SelectedValue == null ||
-                   cmbClasificacion.SelectedValue == null;
+                   cmbClasificacion.SelectedValue == null ||
+                   cmbBodega.SelectedValue == null; ;
         }
     }
 }

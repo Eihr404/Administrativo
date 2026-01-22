@@ -1,0 +1,80 @@
+﻿<UserControl x:Class="Administracion.GUI.VentanaCliente"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid x:Name="cliGrid" Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+            <TextBox x:Name="cliTxtBuscar" Width="250" VerticalContentAlignment="Center" ToolTip="Buscar por usuario o cédula"/>
+            <Button x:Name="cliBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="BtnConsultar_Click"/>
+            <Button x:Name="cliBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="CliBtnIngresar_Click"/>
+            <Button x:Name="cliBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="BtnEliminar_Click"/>
+        </StackPanel>
+
+        <DataGrid x:Name="GridClientes" 
+                  Grid.Row="1" 
+                  AutoGenerateColumns="False" 
+                  SelectionMode="Single" 
+                  IsReadOnly="True" 
+                  MinHeight="200">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Cédula" Binding="{Binding CliCedula}" Width="150"/>
+                <DataGridTextColumn Header="Correo Electrónico" Binding="{Binding CliCorreo}" Width="*"/>
+                <DataGridTextColumn Header="Teléfono" Binding="{Binding CliTelefono}" Width="150"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <Border x:Name="PanelNuevoCliente" 
+                Grid.Row="2" 
+                Margin="0,10,0,0" 
+                Padding="15" 
+                BorderBrush="#CCC" 
+                BorderThickness="1" 
+                CornerRadius="6" 
+                Background="#FAFAFA" 
+                Visibility="Collapsed">
+            <StackPanel>
+                <TextBlock Text="GESTIÓN DE CLIENTES" FontSize="15" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,15"/>
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" Grid.Column="0" Margin="5">
+                        <Label Content="Cédula:"/>
+                        <TextBox x:Name="TxtCedula"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="0" Grid.Column="1" Margin="5">
+                        <Label Content="Teléfono:"/>
+                        <TextBox x:Name="TxtTelefono"/>
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="1" Grid.ColumnSpan="2" Margin="5">
+                        <Label Content="Correo Electrónico:"/>
+                        <TextBox x:Name="TxtCorreo"/>
+                    </StackPanel>
+                </Grid>
+
+                <UniformGrid Columns="2" Margin="0,15,0,0">
+                    <Button Content="Guardar" Margin="5" Click="BtnGuardar_Click" Background="#DFF0D8"/>
+                    <Button Content="Cancelar" Margin="5" Click="BtnCancelar_Click"/>
+                </UniformGrid>
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>

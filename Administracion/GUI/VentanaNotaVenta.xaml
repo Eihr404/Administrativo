@@ -67,13 +67,17 @@
                     </StackPanel>
 
                     <StackPanel Grid.Column="1" Margin="5">
-                        <Label Content="Código Sucursal:"/>
-                        <TextBox x:Name="TxtSucCodigo"/>
+                        <Label Content="Sucursal:"/>
+                        <ComboBox x:Name="CboSucursal" 
+                          DisplayMemberPath="Nombre" 
+                          SelectedValuePath="SucCodigo"/>
                     </StackPanel>
 
                     <StackPanel Grid.Column="2" Margin="5">
-                        <Label Content="Código Pedido:"/>
-                        <TextBox x:Name="TxtPddCodigoNota"/>
+                        <Label Content="Pedido:"/>
+                        <ComboBox x:Name="CboPedido" 
+                          DisplayMemberPath="PddCodigo" 
+                          SelectedValuePath="PddCodigo"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">

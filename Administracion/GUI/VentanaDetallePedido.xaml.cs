@@ -155,6 +155,41 @@ namespace Administracion.GUI
             }
         }
 
+        // 1. Evento cuando cambia la selección del producto
+        private void cmbProductoDpp_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            CalcularMonto();
+        }
+
+        // 2. Evento cuando cambia el texto de la cantidad
+        private void txtDppCantidad_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CalcularMonto();
+        }
+
+        // 3. Método lógico del cálculo
+        private void CalcularMonto()
+        {
+            // Verificamos que haya un producto seleccionado y que la cantidad no esté vacía
+            if (cmbProductoDpp.SelectedItem is ProductoDP productoSeleccionado)
+            {
+                if (int.TryParse(txtDppCantidad.Text, out int cantidad))
+                {
+                    // Realizamos la operación: Cantidad * Precio
+                    // (Asegúrate que ProPrecio exista en tu clase ProductoDP)
+                    double precio = productoSeleccionado.PrecioVenta;
+                    double total = cantidad * precio;
+
+                    // Mostramos el resultado en el TextBox de Monto
+                    txtDppMonto.Text = total.ToString("F2"); // F2 para dos decimales
+                }
+                else
+                {
+                    txtDppMonto.Text = "0";
+                }
+            }
+        }
+
         private void BtnCancelar_Click(object sender, RoutedEventArgs e) => PanelFormularioDpp.Visibility = Visibility.Collapsed;
 
         private void LimpiarCampos()

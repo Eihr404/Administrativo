@@ -13,6 +13,7 @@ namespace Administracion.DP
         public string PddCodigo { get; set; } = string.Empty;
         public int DppCantidad { get; set; }
         public double DppMonto { get; set; }
+        public double ProPrecio { get; set; }
 
         // Instancia del modelo tal como en tu estándar
         private DetallePedidoMD modelo = new DetallePedidoMD();

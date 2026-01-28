@@ -24,8 +24,6 @@
                      VerticalContentAlignment="Center" 
                      ToolTip="Buscar por numero de Nota de Venta"/>
                 <Button x:Name="ndvBtnConsultar" Content="Consultar" Width="90" Margin="5,0,0,0" Click="ndvBtnConsultar_Click"/>
-                <Button x:Name="ndvBtnIngresar" Content="Ingresar" Width="90" Margin="5,0,0,0" Click="ndvBtnIngresar_Click"/>
-                <Button x:Name="ndvBtnModificar" Content="Modificar" Width="90" Margin="5,0,0,0" Click="ndvBtnModificar_Click"/>
                 <Button x:Name="ndvBtnEliminar" Content="Eliminar" Width="90" Margin="5,0,0,0" Click="ndvBtnEliminar_Click"/>
             </StackPanel>
         </StackPanel>

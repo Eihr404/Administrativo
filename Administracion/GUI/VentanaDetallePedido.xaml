@@ -78,12 +78,12 @@
 
                     <StackPanel Grid.Row="1" Grid.Column="0" Margin="5">
                         <Label Content="Cantidad:"/>
-                        <TextBox x:Name="txtDppCantidad"/>
+                        <TextBox x:Name="txtDppCantidad" TextChanged="txtDppCantidad_TextChanged"/>
                     </StackPanel>
 
                     <StackPanel Grid.Row="1" Grid.Column="1" Margin="5">
                         <Label Content="Monto:"/>
-                        <TextBox x:Name="txtDppMonto"/>
+                        <TextBox x:Name="txtDppMonto" IsReadOnly="True" Background="#EBEBEB"/>
                     </StackPanel>
                 </Grid>
 

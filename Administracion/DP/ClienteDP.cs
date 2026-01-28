@@ -6,7 +6,7 @@ namespace Administracion.DP
     {
         public string CliCorreo { get; set; } = string.Empty;
         public string CliCedula { get; set; } = string.Empty;                 
-        public string EmpCedula { get; set; } = "1790011223001";    
+        public string EmpCedula { get; set; } = "1790012345001";    
         public string CliTelefono { get; set; } = string.Empty;
 
     }
@@ -26,7 +26,7 @@ namespace Administracion.DP
 
         public int InsertarCliente(string cedula, string correo, string telefono)
         {
-            return clienteMd.InsertarCliente(cedula, correo, telefono, "1790011223001");
+            return clienteMd.InsertarCliente(cedula, correo, telefono, "1790012345001");
         }
 
         public bool EliminarCliente(string cedula)
